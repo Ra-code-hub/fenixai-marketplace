@@ -1,0 +1,283 @@
+/* ============================================================
+   src/pages/Home/Home.css — Estilos de la página de inicio
+   ============================================================
+   Estilos exclusivos de la landing page.
+   Todas las clases tienen el prefijo "home__" para evitar
+   conflictos con otras páginas.
+   ============================================================ */
+
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+/* ---- Sección hero ---- */
+.home__hero {
+  padding: var(--space-16) 0 var(--space-12); /* Espacio generoso arriba y abajo */
+  text-align: center;                          /* Centrado en móvil */
+}
+
+/* Badge encima del título */
+.home__hero-badge {
+  display: inline-block;
+  font-size: var(--text-xs);              /* 12px */
+  font-weight: 500;
+  color: var(--color-naranja);            /* Naranja — llama la atención */
+  background-color: rgba(255, 77, 28, 0.08); /* Fondo naranja muy sutil */
+  border: 1px solid rgba(255, 77, 28, 0.2);  /* Borde naranja sutil */
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);      /* Forma de píldora */
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-6);         /* Espacio antes del título */
+}
+
+/* Título principal del hero */
+.home__hero-titulo {
+  font-family: var(--font-heading);    /* Syne — tipografía de impacto */
+  font-size: var(--text-4xl);          /* 36px en móvil */
+  font-weight: 800;                    /* Extra negrita */
+  line-height: 1.1;                    /* Líneas apretadas para titulares */
+  color: var(--color-negro);
+  margin-bottom: var(--space-6);
+  letter-spacing: -0.03em;             /* Tracking ajustado para display grande */
+}
+
+/* Parte del título en naranja — acento de marca */
+.home__hero-titulo-acento {
+  color: var(--color-naranja); /* "Sin miedo al fraude." en naranja */
+}
+
+/* Subtítulo descriptivo del hero */
+.home__hero-subtitulo {
+  font-size: var(--text-lg);       /* 18px */
+  color: var(--color-gris-texto);  /* Gris cálido — texto secundario */
+  line-height: 1.7;
+  max-width: 600px;                /* Limitar ancho para legibilidad */
+  margin: 0 auto var(--space-8);  /* Centrado y espacio antes de los botones */
+}
+
+/* Contenedor de los botones CTA */
+.home__hero-acciones {
+  display: flex;
+  flex-direction: column;  /* Apilados en móvil */
+  align-items: center;     /* Centrados */
+  gap: var(--space-3);     /* Espacio entre botones */
+  margin-bottom: var(--space-6);
+}
+
+/* Ajustes del botón principal en el hero — más grande que en el header */
+.home__hero-btn-principal {
+  font-size: var(--text-base); /* 16px */
+  padding: var(--space-4) var(--space-8); /* Padding generoso */
+  width: 100%;                 /* Ancho completo en móvil */
+  max-width: 300px;            /* Límite para que no sea demasiado ancho */
+}
+
+/* Botón secundario del hero */
+.home__hero-btn-secundario {
+  width: 100%;       /* Ancho completo en móvil */
+  max-width: 300px;
+}
+
+/* Texto de prueba social debajo de los botones */
+.home__hero-social {
+  font-size: var(--text-xs);       /* 12px — muy discreto */
+  color: var(--color-gris-texto);
+  opacity: 0.8;
+}
+
+
+/* ============================================================
+   CÓMO FUNCIONA
+   ============================================================ */
+
+/* ---- Sección de pasos ---- */
+.home__como-funciona {
+  padding: var(--space-16) 0; /* Espacio generoso */
+  background-color: var(--color-blanco); /* Fondo blanco — contrasta con el crema */
+}
+
+/* Título de sección reutilizable */
+.home__seccion-titulo {
+  font-family: var(--font-heading); /* Syne */
+  font-size: var(--text-3xl);       /* 30px */
+  font-weight: 700;
+  color: var(--color-negro);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-10);  /* Espacio antes de los elementos de la sección */
+  text-align: center;
+}
+
+/* Grid de los tres pasos */
+.home__pasos {
+  display: grid;
+  grid-template-columns: 1fr;  /* Una columna en móvil */
+  gap: var(--space-8);         /* Espacio entre pasos */
+}
+
+/* Card de cada paso */
+.home__paso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3); /* Espacio entre número, título y descripción */
+}
+
+/* Número del paso (01, 02, 03) */
+.home__paso-numero {
+  font-family: var(--font-heading); /* Syne */
+  font-size: var(--text-4xl);       /* 36px — grande y decorativo */
+  font-weight: 800;
+  color: rgba(255, 77, 28, 0.15);   /* Naranja muy sutil — decorativo */
+  line-height: 1;
+}
+
+/* Título del paso */
+.home__paso-titulo {
+  font-family: var(--font-heading); /* Syne */
+  font-size: var(--text-xl);        /* 20px */
+  font-weight: 600;
+  color: var(--color-negro);
+}
+
+/* Descripción del paso */
+.home__paso-descripcion {
+  font-size: var(--text-base);
+  color: var(--color-gris-texto);
+  line-height: 1.7;
+}
+
+
+/* ============================================================
+   SECCIÓN COMPRADORES
+   ============================================================ */
+
+.home__compradores {
+  padding: var(--space-16) 0;
+  background-color: var(--color-fondo); /* Vuelve al fondo crema */
+}
+
+/* Layout de dos columnas: texto + visual */
+.home__compradores-inner {
+  display: grid;
+  grid-template-columns: 1fr;  /* Una columna en móvil */
+  gap: var(--space-10);
+  align-items: center;
+}
+
+/* Columna de texto */
+.home__compradores-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Párrafo descriptivo */
+.home__compradores-descripcion {
+  font-size: var(--text-base);
+  color: var(--color-gris-texto);
+  line-height: 1.7;
+}
+
+/* Lista de beneficios */
+.home__compradores-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none; /* Sin bullets — usamos ✓ en el texto */
+}
+
+.home__compradores-lista li {
+  font-size: var(--text-base);
+  color: var(--color-negro);
+  font-weight: 500;
+}
+
+/* Columna visual — placeholder del escudo */
+.home__compradores-visual {
+  display: flex;
+  justify-content: center;
+}
+
+/* Card ilustrativa del escudo de protección */
+.home__compradores-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background-color: var(--color-blanco); /* Fondo blanco */
+  border-radius: var(--radius-xl);        /* Esquinas muy redondeadas */
+  padding: var(--space-10) var(--space-12);
+  box-shadow: var(--shadow-md);           /* Sombra sutil para efecto de card */
+  text-align: center;
+}
+
+/* Ícono del escudo */
+.home__compradores-escudo {
+  font-size: 3rem; /* 48px — grande e impactante */
+  line-height: 1;
+}
+
+.home__compradores-card p {
+  font-family: var(--font-heading); /* Syne para el texto de la card */
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-negro);
+}
+
+
+/* ============================================================
+   RESPONSIVE — Tablet y Desktop
+   ============================================================ */
+
+@media (min-width: 640px) {
+  /* Título del hero más grande en tablet */
+  .home__hero-titulo {
+    font-size: var(--text-5xl); /* 48px */
+  }
+
+  /* Botones en fila en tablet */
+  .home__hero-acciones {
+    flex-direction: row;  /* Lado a lado */
+    justify-content: center;
+  }
+
+  .home__hero-btn-principal,
+  .home__hero-btn-secundario {
+    width: auto; /* Ancho automático según contenido */
+  }
+
+  /* Grid de 3 columnas para los pasos */
+  .home__pasos {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Sección de compradores en dos columnas en desktop */
+  .home__compradores-inner {
+    grid-template-columns: 1fr 1fr; /* Texto e imagen lado a lado */
+  }
+
+  /* Hero con más padding en desktop */
+  .home__hero {
+    padding: var(--space-20) 0 var(--space-16);
+    text-align: left; /* Alineado a la izquierda en desktop */
+  }
+
+  /* Subtítulo sin centrar en desktop */
+  .home__hero-subtitulo {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Botones alineados a la izquierda en desktop */
+  .home__hero-acciones {
+    justify-content: flex-start;
+  }
+
+  /* Badge alineado a la izquierda en desktop */
+  .home__hero-badge {
+    display: inline-block;
+  }
+}

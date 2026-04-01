@@ -1,0 +1,228 @@
+/* ============================================================
+   src/styles/global.css — Estilos globales y variables de diseño
+   ============================================================
+   Este archivo define los tokens de diseño del sistema (colores,
+   tipografía, espaciado) y el reset base. Se importa UNA sola vez
+   en main.jsx y aplica a toda la aplicación.
+   ============================================================ */
+
+
+/* ---- Variables de diseño (Design Tokens) ---- */
+:root {
+  /* Paleta de colores del proyecto */
+  --color-fondo:       #F5F0E8; /* Fondo crema — base cálida de toda la app */
+  --color-negro:       #1A1A1A; /* Negro principal — header, texto fuerte */
+  --color-naranja:     #FF4D1C; /* Naranja fuego — CTAs, botones primarios, marca */
+  --color-naranja-hover: #E03E10; /* Naranja oscuro — estado hover del botón primario */
+  --color-blanco:      #FFFFFF; /* Blanco — fondo de cards y áreas de contenido */
+  --color-gris-claro:  #EAE5DB; /* Gris cálido — bordes, separadores suaves */
+  --color-gris-texto:  #6B6560; /* Gris cálido oscuro — texto secundario, placeholders */
+  --color-error:       #D62D2D; /* Rojo — mensajes de error y alertas */
+  --color-exito:       #1A7A4A; /* Verde — confirmaciones y estados exitosos */
+
+  /* Tipografías del proyecto */
+  --font-heading: 'Syne', sans-serif;    /* Headings: moderna, geométrica, con carácter */
+  --font-body:    'DM Sans', sans-serif; /* Cuerpo: legible, amigable, neutral */
+
+  /* Escala tipográfica */
+  --text-xs:   0.75rem;  /* 12px — etiquetas pequeñas, badges */
+  --text-sm:   0.875rem; /* 14px — texto de apoyo, notas */
+  --text-base: 1rem;     /* 16px — cuerpo de texto principal */
+  --text-lg:   1.125rem; /* 18px — texto destacado */
+  --text-xl:   1.25rem;  /* 20px — subtítulos pequeños */
+  --text-2xl:  1.5rem;   /* 24px — subtítulos de sección */
+  --text-3xl:  1.875rem; /* 30px — títulos de página */
+  --text-4xl:  2.25rem;  /* 36px — títulos heroes */
+  --text-5xl:  3rem;     /* 48px — display grande */
+
+  /* Espaciado consistente (basado en múltiplos de 4px) */
+  --space-1:  0.25rem;  /* 4px */
+  --space-2:  0.5rem;   /* 8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+
+  /* Bordes redondeados */
+  --radius-sm:  0.25rem;  /* 4px — inputs pequeños */
+  --radius-md:  0.5rem;   /* 8px — cards, botones */
+  --radius-lg:  0.75rem;  /* 12px — modales, paneles */
+  --radius-xl:  1rem;     /* 16px — elementos grandes */
+  --radius-full: 9999px;  /* Píldoras, avatares circulares */
+
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(26, 26, 26, 0.08);           /* Sombra sutil para cards */
+  --shadow-md: 0 4px 12px rgba(26, 26, 26, 0.10);          /* Sombra media para modales */
+  --shadow-lg: 0 8px 24px rgba(26, 26, 26, 0.12);          /* Sombra grande para overlays */
+
+  /* Transiciones estándar */
+  --transition-fast:   150ms ease;   /* Hover rápido — colores, opacidad */
+  --transition-normal: 250ms ease;   /* Transición estándar — la mayoría de efectos */
+  --transition-slow:   400ms ease;   /* Animaciones de entrada y salida */
+
+  /* Ancho máximo del contenido principal */
+  --container-max: 1200px; /* Ancho máximo del layout central */
+  --container-padding: var(--space-4); /* Padding lateral en móvil */
+}
+
+
+/* ---- Reset base ---- */
+/* Resetear box-sizing en todos los elementos para cálculos predecibles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* El padding y border se incluyen en el ancho total */
+  margin: 0;              /* Eliminar márgenes por defecto del navegador */
+  padding: 0;             /* Eliminar paddings por defecto del navegador */
+}
+
+/* Comportamiento de scroll suave para anclas y navegación */
+html {
+  scroll-behavior: smooth; /* Desplazamiento suave al navegar a anclas #id */
+  font-size: 16px;          /* Base para las unidades rem */
+}
+
+/* Estilos base del body */
+body {
+  font-family: var(--font-body);       /* DM Sans para todo el cuerpo */
+  font-size: var(--text-base);         /* 16px base */
+  color: var(--color-negro);           /* Negro para texto principal */
+  background-color: var(--color-fondo); /* Fondo crema del proyecto */
+  line-height: 1.6;                    /* Altura de línea cómoda para lectura */
+  -webkit-font-smoothing: antialiased; /* Suavizado de fuentes en macOS/iOS */
+  -moz-osx-font-smoothing: grayscale; /* Suavizado en Firefox macOS */
+}
+
+/* Imágenes responsivas por defecto */
+img {
+  max-width: 100%;   /* Nunca desbordar su contenedor */
+  height: auto;      /* Mantener proporción original */
+  display: block;    /* Eliminar espacio fantasma debajo de imágenes inline */
+}
+
+/* Heredar tipografía en inputs y botones (el navegador no lo hace por defecto) */
+input,
+button,
+textarea,
+select {
+  font-family: inherit; /* Usar DM Sans en todos los controles de formulario */
+  font-size: inherit;   /* Respetar el tamaño del contexto */
+}
+
+/* Eliminar estilo por defecto de listas cuando se usan para navegación */
+ul, ol {
+  list-style: none; /* Las listas de nav y componentes no necesitan bullets */
+}
+
+/* Links sin decoración por defecto — cada componente define su propio estilo */
+a {
+  text-decoration: none; /* Quitar subrayado */
+  color: inherit;        /* Heredar color del padre */
+}
+
+/* Botones con cursor pointer siempre */
+button {
+  cursor: pointer;  /* Mano al pasar sobre botones */
+  border: none;     /* Sin borde por defecto */
+  background: none; /* Sin fondo por defecto */
+}
+
+
+/* ---- Utilidades globales ---- */
+
+/* Clase para centrar y limitar el ancho del contenido */
+.container {
+  width: 100%;                      /* Ancho completo en móvil */
+  max-width: var(--container-max);  /* Límite de 1200px en desktop */
+  margin: 0 auto;                   /* Centrado horizontal */
+  padding: 0 var(--container-padding); /* Padding lateral */
+}
+
+/* Clase para texto solo visible a lectores de pantalla (accesibilidad) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Clase para botón primario — naranja fuego, para acciones principales */
+.btn-primary {
+  display: inline-flex;                 /* Flex para centrar ícono y texto */
+  align-items: center;                  /* Centrado vertical */
+  justify-content: center;              /* Centrado horizontal */
+  gap: var(--space-2);                  /* Espacio entre ícono y texto */
+  background-color: var(--color-naranja); /* Fondo naranja */
+  color: var(--color-blanco);           /* Texto blanco */
+  font-family: var(--font-body);        /* DM Sans */
+  font-size: var(--text-base);          /* 16px */
+  font-weight: 600;                     /* Semi-negrita */
+  padding: var(--space-3) var(--space-6); /* 12px vertical, 24px horizontal */
+  border-radius: var(--radius-md);      /* Esquinas redondeadas */
+  transition: background-color var(--transition-fast),
+              transform var(--transition-fast); /* Transición suave */
+  border: none;                         /* Sin borde */
+  cursor: pointer;                      /* Cursor de mano */
+}
+
+/* Estado hover del botón primario */
+.btn-primary:hover {
+  background-color: var(--color-naranja-hover); /* Naranja más oscuro */
+  transform: translateY(-1px);                  /* Levanta ligeramente el botón */
+}
+
+/* Estado activo (clic) del botón primario */
+.btn-primary:active {
+  transform: translateY(0); /* Vuelve a posición original al hacer clic */
+}
+
+/* Clase para botón secundario — contorno, para acciones alternativas */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background-color: transparent;         /* Sin fondo */
+  color: var(--color-negro);             /* Texto negro */
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-negro); /* Borde negro */
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast);
+  cursor: pointer;
+}
+
+/* Estado hover del botón secundario */
+.btn-secondary:hover {
+  background-color: var(--color-negro); /* Se rellena de negro */
+  color: var(--color-blanco);           /* Texto blanco al hacer hover */
+}
+
+
+/* ---- Responsividad base ---- */
+@media (min-width: 640px) {
+  :root {
+    /* En pantallas medianas, más padding lateral */
+    --container-padding: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    /* En desktop, padding lateral generoso */
+    --container-padding: var(--space-8);
+  }
+}

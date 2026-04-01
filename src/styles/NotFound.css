@@ -1,0 +1,49 @@
+/* ============================================================
+   src/pages/NotFound/NotFound.css — Estilos de la página 404
+   ============================================================ */
+
+/* Contenedor de la página 404 — centrado en la pantalla */
+.not-found {
+  display: flex;
+  align-items: center;       /* Centrado vertical */
+  justify-content: center;   /* Centrado horizontal */
+  min-height: 60vh;          /* Al menos 60% del alto de la pantalla */
+  text-align: center;        /* Texto centrado */
+  padding: var(--space-16) 0;
+}
+
+/* Número 404 grande y decorativo */
+.not-found__numero {
+  display: block;
+  font-family: var(--font-heading);        /* Syne */
+  font-size: 8rem;                         /* Enorme — decorativo */
+  font-weight: 800;
+  color: rgba(255, 77, 28, 0.12);          /* Naranja muy sutil — solo decoración */
+  line-height: 1;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.05em;
+}
+
+/* Título de la página 404 */
+.not-found__titulo {
+  font-family: var(--font-heading); /* Syne */
+  font-size: var(--text-3xl);       /* 30px */
+  font-weight: 700;
+  color: var(--color-negro);
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
+}
+
+/* Descripción del error */
+.not-found__descripcion {
+  font-size: var(--text-base);
+  color: var(--color-gris-texto);
+  max-width: 400px;               /* Limitar ancho para legibilidad */
+  margin: 0 auto var(--space-8); /* Centrado y espacio antes del botón */
+  line-height: 1.7;
+}
+
+/* Botón de volver al inicio */
+.not-found__btn {
+  display: inline-flex; /* Hereda .btn-primary de global.css */
+}

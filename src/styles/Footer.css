@@ -1,0 +1,100 @@
+/* ============================================================
+   src/styles/Footer.css — Estilos del Footer
+   ============================================================ */
+
+.footer {
+  background-color: var(--color-negro);
+  color: rgba(255, 255, 255, 0.7);
+  padding: var(--space-12) 0 var(--space-6);
+  margin-top: auto;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.footer__marca { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.footer__logo { display: inline-flex; align-items: center; gap: var(--space-2); width: fit-content; }
+
+.footer__logo-texto {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl); font-weight: 700;
+  color: var(--color-blanco);
+  transition: color var(--transition-fast);
+}
+.footer__logo:hover .footer__logo-texto { color: var(--color-naranja); }
+
+.footer__descripcion {
+  font-size: var(--text-sm); line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 280px;
+}
+
+.footer__pais {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.06);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.footer__columna { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.footer__titulo-columna {
+  font-family: var(--font-body);
+  font-size: var(--text-xs); font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: var(--space-1);
+}
+
+.footer__link {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.65);
+  transition: color var(--transition-fast), padding-left var(--transition-fast);
+  display: block; padding: var(--space-1) 0;
+}
+.footer__link:hover { color: var(--color-blanco); padding-left: var(--space-2); }
+
+.footer__separador {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--space-6);
+}
+
+.footer__inferior {
+  display: flex; flex-direction: column;
+  gap: var(--space-4); align-items: flex-start;
+}
+
+.footer__copyright { font-size: var(--text-xs); color: rgba(255, 255, 255, 0.35); }
+
+.footer__pagos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+
+.footer__pagos-label { font-size: var(--text-xs); color: rgba(255, 255, 255, 0.35); }
+
+.footer__pago-badge {
+  font-size: var(--text-xs); font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 640px) {
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .footer__marca { grid-column: 1 / -1; }
+}
+
+@media (min-width: 1024px) {
+  .footer__grid { grid-template-columns: 1.5fr 1fr 1fr 1fr; }
+  .footer__marca { grid-column: auto; }
+  .footer__inferior { flex-direction: row; justify-content: space-between; align-items: center; }
+}

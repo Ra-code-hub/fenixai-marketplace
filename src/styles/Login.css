@@ -1,0 +1,232 @@
+/* ============================================================
+   src/pages/Login/Login.css — Estilos de la página de login
+   ============================================================
+   Todas las clases usan el prefijo "login__" para evitar
+   conflictos con otras páginas.
+   Diseño: card centrada en la pantalla, cálida y confiable.
+   ============================================================ */
+
+
+/* ---- Contenedor de la página ---- */
+.login {
+  display: flex;
+  align-items: center;       /* Centrado vertical */
+  justify-content: center;   /* Centrado horizontal */
+  min-height: calc(100vh - 64px - 300px); /* Descuenta el header y el footer */
+  padding: var(--space-8) var(--space-4); /* Padding en móvil */
+}
+
+
+/* ---- Card del formulario ---- */
+.login__contenedor {
+  width: 100%;
+  max-width: 420px;                   /* Ancho máximo de la card */
+  background-color: var(--color-blanco); /* Fondo blanco sobre el crema del layout */
+  border-radius: var(--radius-xl);    /* Esquinas generosamente redondeadas */
+  box-shadow: var(--shadow-md);       /* Sombra sutil para elevar la card */
+  padding: var(--space-8) var(--space-6); /* Padding interno generoso */
+}
+
+
+/* ---- Encabezado ---- */
+.login__encabezado {
+  text-align: center;          /* Todo centrado */
+  margin-bottom: var(--space-8); /* Espacio antes del formulario */
+}
+
+/* Ícono de llama decorativo */
+.login__icono {
+  display: block;
+  font-size: 2rem;              /* 32px — prominente pero no exagerado */
+  margin-bottom: var(--space-3);
+  line-height: 1;
+}
+
+/* Título principal */
+.login__titulo {
+  font-family: var(--font-heading); /* Syne */
+  font-size: var(--text-2xl);       /* 24px */
+  font-weight: 700;
+  color: var(--color-negro);
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.02em;
+}
+
+/* Subtítulo con link */
+.login__subtitulo {
+  font-size: var(--text-sm);      /* 14px */
+  color: var(--color-gris-texto);
+}
+
+/* Link genérico dentro del formulario */
+.login__link {
+  color: var(--color-naranja);    /* Naranja — llamada a la acción secundaria */
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.login__link:hover {
+  color: var(--color-naranja-hover);
+  text-decoration: underline;    /* Subrayado al hover para indicar interactividad */
+}
+
+
+/* ---- Formulario ---- */
+.login__form {
+  display: flex;
+  flex-direction: column;    /* Campos apilados verticalmente */
+  gap: var(--space-5);       /* Espacio entre campos */
+}
+
+
+/* ---- Campo individual ---- */
+.login__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2); /* Espacio entre label e input */
+}
+
+/* Fila de label + link "¿La olvidaste?" */
+.login__label-fila {
+  display: flex;
+  justify-content: space-between; /* Label a la izq, link a la der */
+  align-items: center;
+}
+
+/* Etiqueta del campo */
+.login__label {
+  font-size: var(--text-sm);  /* 14px */
+  font-weight: 500;
+  color: var(--color-negro);
+}
+
+/* Link de "¿Olvidaste tu contraseña?" */
+.login__link-olvidaste {
+  font-size: var(--text-xs);      /* 12px — muy discreto */
+  color: var(--color-gris-texto);
+  transition: color var(--transition-fast);
+}
+
+.login__link-olvidaste:hover {
+  color: var(--color-naranja);
+}
+
+/* Input de texto */
+.login__input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4); /* Padding interno cómodo */
+  border: 1.5px solid var(--color-gris-claro); /* Borde sutil */
+  border-radius: var(--radius-md);             /* Esquinas redondeadas */
+  font-size: var(--text-base);                 /* 16px — evita zoom en iOS */
+  font-family: var(--font-body);               /* DM Sans */
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  outline: none; /* Quitar outline por defecto — se reemplaza con box-shadow */
+}
+
+/* Estado focus — resaltar el campo activo */
+.login__input:focus {
+  border-color: var(--color-naranja);                    /* Borde naranja al enfocar */
+  box-shadow: 0 0 0 3px rgba(255, 77, 28, 0.12);        /* Halo naranja sutil */
+}
+
+/* Estado deshabilitado — mientras carga */
+.login__input:disabled {
+  background-color: var(--color-gris-claro); /* Fondo gris para indicar inactividad */
+  cursor: not-allowed;                        /* Cursor de no permitido */
+  opacity: 0.7;
+}
+
+/* Placeholder del input */
+.login__input::placeholder {
+  color: var(--color-gris-texto);
+  opacity: 0.6; /* Más sutil que el texto real */
+}
+
+
+/* ---- Mensaje de error ---- */
+.login__error {
+  display: flex;
+  align-items: flex-start;     /* Alinear ícono con la primera línea del texto */
+  gap: var(--space-2);
+  background-color: rgba(214, 45, 45, 0.06); /* Fondo rojo muy sutil */
+  border: 1px solid rgba(214, 45, 45, 0.2);  /* Borde rojo sutil */
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);   /* 14px */
+  color: var(--color-error);   /* Texto rojo */
+  line-height: 1.5;
+}
+
+/* Ícono de advertencia */
+.login__error-icono {
+  font-size: 1rem;
+  flex-shrink: 0;              /* No se encoge si el texto ocupa mucho espacio */
+  margin-top: 1px;             /* Alineación visual con la primera línea */
+}
+
+
+/* ---- Botón de submit ---- */
+.login__btn {
+  width: 100%;                /* Ancho completo del formulario */
+  padding: var(--space-4);    /* Padding generoso — botón grande y fácil de tocar */
+  font-size: var(--text-base);
+  margin-top: var(--space-2); /* Un poco de espacio extra antes del botón */
+}
+
+/* Estado deshabilitado del botón */
+.login__btn:disabled {
+  opacity: 0.5;          /* Semi-transparente */
+  cursor: not-allowed;   /* Cursor de no permitido */
+  transform: none;       /* Sin efecto de elevación cuando está deshabilitado */
+}
+
+
+/* ---- Separador "o" ---- */
+.login__separador {
+  position: relative;              /* Para posicionar el texto "o" */
+  text-align: center;
+  margin: var(--space-6) 0;
+}
+
+/* Línea horizontal del separador */
+.login__separador::before {
+  content: '';
+  position: absolute;
+  top: 50%;                        /* Centrado vertical */
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--color-gris-claro); /* Línea gris sutil */
+}
+
+/* Texto "o" del separador */
+.login__separador-texto {
+  position: relative;              /* Por encima de la línea */
+  background-color: var(--color-blanco); /* Fondo blanco para tapar la línea */
+  padding: 0 var(--space-3);       /* Espacio horizontal alrededor del "o" */
+  font-size: var(--text-sm);
+  color: var(--color-gris-texto);
+}
+
+
+/* ---- Sección de registro ---- */
+.login__registro {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3); /* Espacio entre el texto y el botón */
+}
+
+/* Texto "¿Quieres vender?" */
+.login__registro-texto {
+  font-size: var(--text-sm);
+  color: var(--color-gris-texto);
+}
+
+/* Botón secundario de registro */
+.login__btn-registro {
+  width: 100%; /* Ancho completo */
+}

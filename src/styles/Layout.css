@@ -1,0 +1,535 @@
+/* ============================================================
+   src/components/Layout/Layout.css — Estilos de la base completa
+   ============================================================
+   Este archivo contiene los estilos de los tres bloques
+   estructurales de la aplicación:
+     - SECCIÓN 1: Layout    (contenedor raíz y área de contenido)
+     - SECCIÓN 2: Header    (barra de navegación sticky)
+     - SECCIÓN 3: Footer    (pie de página)
+   Se importa una sola vez en Layout.jsx y aplica a toda la base.
+   Los estilos de cada página van en su propio archivo .css.
+   ============================================================ */
+
+
+/* ============================================================
+   SECCIÓN 1 — LAYOUT
+   Estructura de columna que sostiene Header + contenido + Footer
+   ============================================================ */
+
+/* Contenedor raíz — ocupa al menos la pantalla completa */
+.layout {
+  display: flex;           /* Disposición en columna flex */
+  flex-direction: column;  /* Header arriba, contenido en medio, footer abajo */
+  min-height: 100vh;       /* Mínimo el alto total del viewport */
+  /* El flex-direction column + min-height 100vh es la clave:
+     cuando el contenido es corto, .layout__main crece (flex: 1)
+     para empujar el footer hasta el fondo de la pantalla */
+}
+
+/* Zona central donde se renderiza cada página */
+.layout__main {
+  flex: 1;                              /* Ocupa todo el espacio sobrante */
+  background-color: var(--color-fondo); /* Fondo crema del proyecto */
+}
+
+
+/* ============================================================
+   SECCIÓN 2 — HEADER
+   Barra de navegación sticky — mobile-first
+   ============================================================ */
+
+/* Contenedor del header — se queda pegado en la parte superior */
+.header {
+  position: sticky;    /* Fijo al hacer scroll */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;        /* Por encima de todo el contenido de la página */
+  background-color: var(--color-negro);                   /* Fondo negro */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);    /* Línea sutil de separación */
+}
+
+/* Fila interior: logo — nav — acciones — hamburguesa */
+.header__inner {
+  display: flex;
+  align-items: center;             /* Centrado vertical de todos los elementos */
+  justify-content: space-between;  /* Logo a la izq, acciones a la der */
+  height: 64px;                    /* Altura fija del header */
+}
+
+
+/* ---- Logo ---- */
+
+/* Contenedor del logo */
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);  /* Espacio entre ícono de llama y texto */
+  flex-shrink: 0;       /* No se comprime si hay poco espacio horizontal */
+}
+
+/* Emoji de llama */
+.header__logo-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* Nombre "FenixAI" */
+.header__logo-text {
+  font-family: var(--font-heading);  /* Syne — tipografía de marca */
+  font-size: var(--text-xl);         /* 20px */
+  font-weight: 700;
+  color: var(--color-blanco);
+  letter-spacing: -0.02em;
+}
+
+/* El texto del logo se torna naranja al pasar el cursor */
+.header__logo:hover .header__logo-text {
+  color: var(--color-naranja);
+  transition: color var(--transition-fast);
+}
+
+
+/* ---- Navegación desktop ---- */
+
+/* Contenedor de links — oculto en móvil */
+.header__nav {
+  display: none;        /* Se activa en desktop con media query */
+  align-items: center;
+  gap: var(--space-6);  /* Espacio entre links */
+}
+
+/* Link individual de navegación */
+.header__nav-link {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);           /* 14px */
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);     /* Blanco semi-transparente */
+  letter-spacing: 0.01em;
+  transition: color var(--transition-fast);
+  padding: var(--space-1) 0;
+  position: relative;                  /* Para el pseudo-elemento de línea activa */
+}
+
+/* Línea naranja bajo el link — crece al hacer hover */
+.header__nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;                                   /* Empieza invisible */
+  height: 2px;
+  background-color: var(--color-naranja);
+  transition: width var(--transition-normal); /* Animación de izq. a der. */
+}
+
+/* Al pasar el cursor, el texto se pone blanco y la línea aparece */
+.header__nav-link:hover {
+  color: var(--color-blanco);
+}
+
+.header__nav-link:hover::after {
+  width: 100%;
+}
+
+/* Estado activo — la ruta actual */
+.header__nav-link--active {
+  color: var(--color-blanco);
+}
+
+.header__nav-link--active::after {
+  width: 100%; /* Línea siempre visible en la ruta activa */
+}
+
+
+/* ---- Acciones de usuario (desktop) ---- */
+
+/* Contenedor de botones — oculto en móvil */
+.header__actions {
+  display: none;       /* Se activa en desktop con media query */
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* "Iniciar sesión" — solo texto */
+.header__link-login {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color var(--transition-fast);
+}
+
+.header__link-login:hover {
+  color: var(--color-blanco);
+}
+
+/* "Abre tu tienda" — hereda .btn-primary, ajustado al tamaño del header */
+.header__btn-cta {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4);
+}
+
+/* "Mi tienda" — enlace al panel del vendedor autenticado */
+.header__link-panel {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color var(--transition-fast);
+}
+
+.header__link-panel:hover {
+  color: var(--color-naranja);
+}
+
+/* "Salir" — botón de cierre de sesión */
+.header__btn-salir {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5); /* Más sutil — acción secundaria */
+  transition: color var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.header__btn-salir:hover {
+  color: var(--color-error); /* Rojo — señal de acción destructiva */
+}
+
+
+/* ---- Botón hamburguesa (solo móvil) ---- */
+
+.header__hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;        /* Espacio entre las tres líneas */
+  width: 40px;     /* Área de toque generosa en móvil */
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+}
+
+/* Cada una de las tres líneas del ícono */
+.header__hamburger-linea {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-blanco);
+  border-radius: 2px;
+  transition: transform var(--transition-normal),
+              opacity  var(--transition-normal);
+}
+
+/* Transformación a "X" cuando el menú está abierto */
+/* Línea 1: baja y gira +45° */
+.header__hamburger--abierto .header__hamburger-linea:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+/* Línea 2: desaparece */
+.header__hamburger--abierto .header__hamburger-linea:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+/* Línea 3: sube y gira -45° */
+.header__hamburger--abierto .header__hamburger-linea:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* ---- Menú móvil desplegable ---- */
+
+.header__menu-movil {
+  display: flex;
+  flex-direction: column;                                     /* Links apilados */
+  background-color: var(--color-negro);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--space-4);
+  gap: var(--space-1);
+
+  /* Estado cerrado — invisible y sin altura */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height var(--transition-normal),
+              opacity    var(--transition-normal);
+}
+
+/* Estado abierto — desplegado con animación suave */
+.header__menu-movil--abierto {
+  max-height: 400px; /* Suficiente para todos los items */
+  opacity: 1;
+}
+
+/* Link del menú móvil */
+.header__menu-movil-link {
+  font-size: var(--text-base);  /* 16px — más grande para el dedo */
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  padding: var(--space-3) 0;    /* Área de toque generosa */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Divisor sutil */
+  transition: color var(--transition-fast);
+  text-align: left;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.header__menu-movil-link:hover {
+  color: var(--color-blanco);
+}
+
+/* Opción de cerrar sesión — rojo para indicar acción destructiva */
+.header__menu-movil-salir {
+  color: rgba(214, 45, 45, 0.8);
+}
+
+.header__menu-movil-salir:hover {
+  color: var(--color-error);
+}
+
+/* Separador entre secciones del menú móvil */
+.header__menu-movil-separador {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: var(--space-2) 0;
+}
+
+/* CTA "Abre tu tienda gratis" dentro del menú móvil */
+.header__menu-movil-cta {
+  display: block;
+  background-color: var(--color-naranja);
+  color: var(--color-blanco);
+  font-weight: 600;
+  font-size: var(--text-base);
+  text-align: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-2);
+  transition: background-color var(--transition-fast);
+}
+
+.header__menu-movil-cta:hover {
+  background-color: var(--color-naranja-hover);
+}
+
+
+/* ============================================================
+   SECCIÓN 3 — FOOTER
+   Pie de página con grid responsivo de links
+   ============================================================ */
+
+/* Contenedor del footer */
+.footer {
+  background-color: var(--color-negro);             /* Fondo negro */
+  color: rgba(255, 255, 255, 0.7);                  /* Texto base semi-transparente */
+  padding: var(--space-12) 0 var(--space-6);        /* Más espacio arriba que abajo */
+  margin-top: auto;                                  /* Se pega al fondo si el main es corto */
+}
+
+
+/* ---- Grid superior ---- */
+
+/* Grid de columnas: marca + 3 columnas de links */
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;     /* Una sola columna en móvil */
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);  /* Espacio antes del separador */
+}
+
+/* Columna de la marca */
+.footer__marca {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Logo en el footer */
+.footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+}
+
+/* Texto del logo */
+.footer__logo-texto {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-blanco);
+  transition: color var(--transition-fast);
+}
+
+.footer__logo:hover .footer__logo-texto {
+  color: var(--color-naranja);
+}
+
+/* Descripción del marketplace */
+.footer__descripcion {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 280px;
+}
+
+/* Badge "🇨🇴 Hecho en Colombia" */
+.footer__pais {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.06);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+/* Cada columna de links */
+.footer__columna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Título de columna (PARA VENDEDORES, LEGAL, etc.) */
+.footer__titulo-columna {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;           /* Tracking amplio para estilo de etiqueta */
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: var(--space-1);
+}
+
+/* Link individual del footer */
+.footer__link {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.65);
+  display: block;                   /* Área de clic completa */
+  padding: var(--space-1) 0;
+  transition: color var(--transition-fast),
+              padding-left var(--transition-fast);
+}
+
+/* Al hover: texto más brillante + pequeña indentación */
+.footer__link:hover {
+  color: var(--color-blanco);
+  padding-left: var(--space-2);
+}
+
+
+/* ---- Fila inferior ---- */
+
+/* Separador horizontal antes del copyright */
+.footer__separador {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--space-6);
+}
+
+/* Fila de copyright + métodos de pago */
+.footer__inferior {
+  display: flex;
+  flex-direction: column;  /* Apilados en móvil */
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+/* Texto de copyright */
+.footer__copyright {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Contenedor de los badges de pago */
+.footer__pagos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Etiqueta "Pagamos con:" */
+.footer__pagos-label {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Badge de cada método de pago */
+.footer__pago-badge {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+
+/* ============================================================
+   MEDIA QUERIES — Tablet (≥640px) y Desktop (≥768px / ≥1024px)
+   ============================================================ */
+
+@media (min-width: 640px) {
+  /* Footer: grid de 2 columnas en tablet */
+  .footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* La marca ocupa las dos columnas en tablet */
+  .footer__marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 768px) {
+  /* Header: mostrar nav y acciones de escritorio */
+  .header__nav {
+    display: flex;
+  }
+
+  .header__actions {
+    display: flex;
+  }
+
+  /* Header: ocultar hamburguesa y menú móvil */
+  .header__hamburger {
+    display: none;
+  }
+
+  .header__menu-movil {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Footer: grid de 4 columnas — marca más ancha */
+  .footer__grid {
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  }
+
+  /* La marca vuelve a su celda en desktop */
+  .footer__marca {
+    grid-column: auto;
+  }
+
+  /* Footer inferior en fila horizontal */
+  .footer__inferior {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
