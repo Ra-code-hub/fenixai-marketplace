@@ -1,32 +1,24 @@
 // ============================================================
 // src/App.jsx — Configuracion central de rutas
 // ============================================================
-// Todos los JSX viven en src/components/ o src/pages/
-// Todos los CSS viven en src/styles/
-//
-// publica  — cualquiera puede verla
-// privada  — solo usuarios autenticados (usa RutaProtegida)
-// ============================================================
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
 import Layout        from '@/components/Layout'
 import RutaProtegida from '@/components/RutaProtegida'
 
-// ---- Paginas publicas ----
+// Paginas publicas
 import Home          from '@/pages/Home'
 import Login         from '@/pages/Login'
 import Registro      from '@/pages/Registro'
 import TiendaPublica from '@/pages/TiendaPublica'
+import Carrito       from '@/pages/Carrito'
 import NotFound      from '@/pages/NotFound'
 
-// ---- Paginas privadas ----
+// Paginas privadas
 import CrearTienda   from '@/pages/CrearTienda'
 import Panel         from '@/pages/Panel'
 import NuevoProducto from '@/pages/NuevoProducto'
-
-// ---- Proximas paginas (descomenta al crearlas) ----
-// import Checkout from '@/pages/Checkout'
+import Checkout      from '@/pages/Checkout'
 
 const router = createBrowserRouter([
   {
@@ -35,10 +27,11 @@ const router = createBrowserRouter([
     children: [
 
       // ---- Rutas publicas ----
-      { index: true, element: <Home /> },
-      { path: 'login',    element: <Login /> },
-      { path: 'registro', element: <Registro /> },
-      { path: 'tienda/:slug', element: <TiendaPublica /> },
+      { index: true,            element: <Home /> },
+      { path: 'login',          element: <Login /> },
+      { path: 'registro',       element: <Registro /> },
+      { path: 'tienda/:slug',   element: <TiendaPublica /> },
+      { path: 'tienda/:slug/carrito', element: <Carrito /> },
 
       // ---- Rutas privadas ----
       {
@@ -53,12 +46,10 @@ const router = createBrowserRouter([
         path: 'tienda/:slug/nuevo-producto',
         element: <RutaProtegida><NuevoProducto /></RutaProtegida>,
       },
-
-      // ---- Proximas rutas privadas ----
-      // {
-      //   path: 'checkout/:orderId',
-      //   element: <RutaProtegida><Checkout /></RutaProtegida>,
-      // },
+      {
+        path: 'tienda/:slug/checkout',
+        element: <RutaProtegida><Checkout /></RutaProtegida>,
+      },
 
       { path: '*', element: <NotFound /> },
     ],
