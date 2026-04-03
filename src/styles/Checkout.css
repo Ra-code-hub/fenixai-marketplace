@@ -1,0 +1,487 @@
+/* ============================================================
+   src/styles/Checkout.css — Estilos del checkout
+   ============================================================ */
+
+   .checkout {
+    padding: var(--space-6) 0 var(--space-16);
+  }
+  
+  /* ---- Link de regreso ---- */
+  .checkout__volver {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    margin-bottom: var(--space-6);
+    transition: color var(--transition-fast);
+  }
+  
+  .checkout__volver::before {
+    content: '\2190';
+    margin-right: var(--space-2);
+  }
+  
+  .checkout__volver:hover { color: var(--color-naranja); }
+  
+  /* ---- Titulo ---- */
+  .checkout__titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-negro);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-8);
+  }
+  
+  /* ---- Layout: formulario + resumen ---- */
+  .checkout__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+  
+  
+  /* ============================================================
+     FORMULARIO
+     ============================================================ */
+  
+  .checkout__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8) var(--space-6);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  /* Titulo de seccion dentro del formulario */
+  .checkout__form-titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-negro);
+  }
+  
+  /* Separacion extra para el titulo de entrega */
+  .checkout__form-titulo--separado {
+    margin-top: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-gris-claro);
+  }
+  
+  /* Campo */
+  .checkout__campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  /* Label */
+  .checkout__label {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-negro);
+  }
+  
+  .checkout__requerido { color: var(--color-naranja); }
+  .checkout__opcional  { font-weight: 400; color: var(--color-gris-texto); font-size: var(--text-xs); }
+  
+  /* Input base */
+  .checkout__input,
+  .checkout__textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid var(--color-gris-claro);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    outline: none;
+  }
+  
+  .checkout__input:focus,
+  .checkout__textarea:focus {
+    border-color: var(--color-naranja);
+    box-shadow: 0 0 0 3px rgba(255, 77, 28, 0.12);
+  }
+  
+  .checkout__input:disabled,
+  .checkout__textarea:disabled {
+    background-color: var(--color-gris-claro);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .checkout__input::placeholder,
+  .checkout__textarea::placeholder {
+    color: var(--color-gris-texto);
+    opacity: 0.6;
+  }
+  
+  .checkout__textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+  
+  /* Error */
+  .checkout__error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    background-color: rgba(214, 45, 45, 0.06);
+    border: 1px solid rgba(214, 45, 45, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-error);
+  }
+  
+  /* Boton confirmar */
+  .checkout__btn-confirmar {
+    width: 100%;
+    padding: var(--space-4);
+    font-size: var(--text-base);
+    margin-top: var(--space-2);
+  }
+  
+  .checkout__btn-confirmar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* Nota legal */
+  .checkout__nota-legal {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+    text-align: center;
+    line-height: 1.5;
+  }
+  
+  .checkout__link {
+    color: var(--color-naranja);
+    transition: color var(--transition-fast);
+  }
+  
+  .checkout__link:hover { color: var(--color-naranja-hover); }
+  
+  
+  /* ============================================================
+     RESUMEN DEL PEDIDO (LATERAL)
+     ============================================================ */
+  
+  .checkout__resumen {
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--color-gris-claro);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  
+  .checkout__resumen-titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-negro);
+  }
+  
+  /* Items del resumen */
+  .checkout__resumen-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .checkout__resumen-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  
+  .checkout__resumen-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  
+  .checkout__resumen-item-nombre {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-negro);
+    line-height: 1.3;
+  }
+  
+  .checkout__resumen-item-cantidad {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+  }
+  
+  .checkout__resumen-item-precio {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-negro);
+    white-space: nowrap;
+  }
+  
+  .checkout__resumen-separador {
+    height: 1px;
+    background-color: var(--color-gris-claro);
+  }
+  
+  /* Total */
+  .checkout__resumen-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-negro);
+  }
+  
+  .checkout__resumen-total-valor {
+    font-family: var(--font-heading);
+  }
+  
+  /* Nota de pago manual */
+  .checkout__resumen-nota {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+    line-height: 1.5;
+    padding: var(--space-3);
+    background-color: rgba(245, 240, 232, 0.8);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-gris-claro);
+  }
+  
+  
+  /* ============================================================
+     PANTALLA DE CONFIRMACION
+     ============================================================ */
+  
+  .checkout__confirmacion {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-8) 0 var(--space-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  
+  /* Icono de exito */
+  .checkout__confirmacion-icono {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-exito);
+    color: var(--color-blanco);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .checkout__confirmacion-titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-negro);
+    letter-spacing: -0.02em;
+  }
+  
+  .checkout__confirmacion-subtitulo {
+    font-size: var(--text-base);
+    color: var(--color-gris-texto);
+    line-height: 1.7;
+  }
+  
+  
+  /* ---- Instrucciones de pago ---- */
+  .checkout__instrucciones {
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--color-gris-claro);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  
+  .checkout__instrucciones-titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-negro);
+  }
+  
+  /* Paso individual */
+  .checkout__paso {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  
+  /* Numero del paso */
+  .checkout__paso-numero {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-naranja);
+    color: var(--color-blanco);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  /* Contenido del paso */
+  .checkout__paso-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .checkout__paso-contenido strong {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-negro);
+  }
+  
+  .checkout__paso-contenido p {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+  }
+  
+  /* Monto destacado */
+  .checkout__monto {
+    color: var(--color-negro);
+    font-size: var(--text-base);
+  }
+  
+  /* Metodos de pago */
+  .checkout__metodos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-left: calc(28px + var(--space-4)); /* Alinear con el contenido del paso */
+  }
+  
+  .checkout__metodo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    background-color: rgba(245, 240, 232, 0.6);
+    border: 1px solid var(--color-gris-claro);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .checkout__metodo-nombre {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .checkout__metodo-numero {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-negro);
+    letter-spacing: 0.02em;
+  }
+  
+  .checkout__metodo-titular {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+  }
+  
+  /* Referencia de pago */
+  .checkout__referencia {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    background-color: var(--color-negro);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .checkout__referencia-label {
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .checkout__referencia-codigo {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-blanco);
+    font-family: monospace;
+    letter-spacing: 0.1em;
+  }
+  
+  .checkout__btn-copiar {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+  }
+  
+  .checkout__btn-copiar:hover { opacity: 0.85; }
+  
+  
+  /* ---- Nota de proteccion ---- */
+  .checkout__nota-proteccion {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+    padding: var(--space-4);
+    background-color: rgba(26, 122, 74, 0.04);
+    border: 1px solid rgba(26, 122, 74, 0.15);
+    border-radius: var(--radius-md);
+  }
+  
+  .checkout__nota-proteccion strong {
+    color: var(--color-exito);
+  }
+  
+  /* Acciones de la confirmacion */
+  .checkout__confirmacion-acciones {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  
+  
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  
+  @media (min-width: 1024px) {
+    .checkout__layout {
+      grid-template-columns: 1fr 360px;
+    }
+  
+    .checkout__resumen {
+      position: sticky;
+      top: calc(64px + var(--space-6));
+    }
+  }  

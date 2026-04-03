@@ -41,7 +41,7 @@ export default function Header() {
 
         {/* ---- Logo ---- */}
         <Link to="/" className="header__logo" onClick={cerrarMenu}>
-          <span className="header__logo-icon" aria-hidden="true">🔥</span>
+          <span className="header__logo-icon" aria-hidden="true"></span>
           <span className="header__logo-text">FenixAI</span>
         </Link>
 

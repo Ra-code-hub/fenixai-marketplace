@@ -101,7 +101,6 @@ export default function Registro() {
 
         {/* ---- Encabezado ---- */}
         <div className="registro__encabezado">
-          <span className="registro__icono" aria-hidden="true">🔥</span>
           <h1 className="registro__titulo">Crea tu tienda gratis</h1>
           <p className="registro__subtitulo">
             ¿Ya tienes cuenta?{' '}

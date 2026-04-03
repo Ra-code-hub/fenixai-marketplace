@@ -1,91 +1,70 @@
 // ============================================================
-// src/App.jsx — Configuración central de rutas
+// src/App.jsx — Configuracion central de rutas
 // ============================================================
-// Mapa de toda la aplicación.
 // Todos los JSX viven en src/components/ o src/pages/
 // Todos los CSS viven en src/styles/
 //
-// CÓMO AGREGAR UNA NUEVA PÁGINA:
-// 1. Crear NombrePagina.jsx en src/pages/
-// 2. Crear NombrePagina.css en src/styles/
-// 3. Importar el componente aquí abajo
-// 4. Agregar un <Route> dentro de las rutas del Layout
+// publica  — cualquiera puede verla
+// privada  — solo usuarios autenticados (usa RutaProtegida)
 // ============================================================
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-// ---- Layout base (Header + Footer + Outlet) ----
-import Layout   from '@/components/Layout'
+import Layout        from '@/components/Layout'
+import RutaProtegida from '@/components/RutaProtegida'
 
-// ---- Páginas ----
-import Home     from '@/pages/Home'      // Ruta: /
-import Login    from '@/pages/Login'     // Ruta: /login
-import Registro from '@/pages/Registro'  // Ruta: /registro
-import NotFound from '@/pages/NotFound'  // Ruta: * (cualquier URL no definida)
+// ---- Paginas publicas ----
+import Home          from '@/pages/Home'
+import Login         from '@/pages/Login'
+import Registro      from '@/pages/Registro'
+import TiendaPublica from '@/pages/TiendaPublica'
+import NotFound      from '@/pages/NotFound'
 
-// ---- Próximas páginas (descomenta al crearlas) ----
-// import CrearTienda   from '@/pages/CrearTienda'    // Ruta: /crear-tienda
-// import TiendaPublica from '@/pages/TiendaPublica'  // Ruta: /tienda/:slug
-// import NuevoProducto from '@/pages/NuevoProducto'  // Ruta: /tienda/:slug/nuevo-producto
-// import Panel         from '@/pages/Panel'          // Ruta: /panel
-// import Checkout      from '@/pages/Checkout'       // Ruta: /checkout/:orderId
+// ---- Paginas privadas ----
+import CrearTienda   from '@/pages/CrearTienda'
+import Panel         from '@/pages/Panel'
+import NuevoProducto from '@/pages/NuevoProducto'
 
-// ---- Definición del router ----
+// ---- Proximas paginas (descomenta al crearlas) ----
+// import Checkout from '@/pages/Checkout'
+
 const router = createBrowserRouter([
   {
-    // Layout raíz — todas las páginas hijas heredan Header y Footer
     path: '/',
     element: <Layout />,
     children: [
 
-      // Inicio
+      // ---- Rutas publicas ----
+      { index: true, element: <Home /> },
+      { path: 'login',    element: <Login /> },
+      { path: 'registro', element: <Registro /> },
+      { path: 'tienda/:slug', element: <TiendaPublica /> },
+
+      // ---- Rutas privadas ----
       {
-        index: true,          // Equivale a path: '/'
-        element: <Home />,
+        path: 'crear-tienda',
+        element: <RutaProtegida><CrearTienda /></RutaProtegida>,
+      },
+      {
+        path: 'panel',
+        element: <RutaProtegida><Panel /></RutaProtegida>,
+      },
+      {
+        path: 'tienda/:slug/nuevo-producto',
+        element: <RutaProtegida><NuevoProducto /></RutaProtegida>,
       },
 
-      // Autenticación
-      {
-        path: 'login',
-        element: <Login />,
-      },
-      {
-        path: 'registro',
-        element: <Registro />,
-      },
-
-      // ---- Próximas rutas (descomenta al crearlas) ----
-      // {
-      //   path: 'crear-tienda',
-      //   element: <CrearTienda />,
-      // },
-      // {
-      //   path: 'tienda/:slug',
-      //   element: <TiendaPublica />,
-      // },
-      // {
-      //   path: 'tienda/:slug/nuevo-producto',
-      //   element: <NuevoProducto />,
-      // },
-      // {
-      //   path: 'panel',
-      //   element: <Panel />,
-      // },
+      // ---- Proximas rutas privadas ----
       // {
       //   path: 'checkout/:orderId',
-      //   element: <Checkout />,
+      //   element: <RutaProtegida><Checkout /></RutaProtegida>,
       // },
 
-      // Catch-all: cualquier URL no definida → 404
-      {
-        path: '*',
-        element: <NotFound />,
-      },
+      { path: '*', element: <NotFound /> },
     ],
   },
 ])
 
-// RouterProvider conecta el router con toda la aplicación
 export default function App() {
   return <RouterProvider router={router} />
 }

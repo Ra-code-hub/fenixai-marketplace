@@ -1,0 +1,446 @@
+/* ============================================================
+   src/styles/NuevoProducto.css — Estilos de nuevo producto
+   ============================================================
+   Todas las clases usan el prefijo "nuevo-producto__" para
+   evitar conflictos con otras paginas.
+   ============================================================ */
+
+
+/* ---- Contenedor de la pagina ---- */
+.nuevo-producto {
+    padding: var(--space-6) 0 var(--space-16);
+  }
+  
+  
+  /* ---- Link de regreso ---- */
+  .nuevo-producto__volver {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    margin-bottom: var(--space-6);
+    transition: color var(--transition-fast);
+  }
+  
+  .nuevo-producto__volver::before {
+    content: '\2190'; /* Flecha izquierda */
+    margin-right: var(--space-2);
+  }
+  
+  .nuevo-producto__volver:hover {
+    color: var(--color-naranja);
+  }
+  
+  
+  /* ---- Encabezado ---- */
+  .nuevo-producto__encabezado {
+    margin-bottom: var(--space-8);
+  }
+  
+  .nuevo-producto__titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-negro);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-2);
+  }
+  
+  .nuevo-producto__subtitulo {
+    font-size: var(--text-base);
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+  }
+  
+  
+  /* ---- Layout: formulario + lateral ---- */
+  .nuevo-producto__layout {
+    display: grid;
+    grid-template-columns: 1fr;    /* Una columna en movil */
+    gap: var(--space-8);
+    align-items: flex-start;
+  }
+  
+  
+  /* ---- Formulario ---- */
+  .nuevo-producto__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8) var(--space-6);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  
+  /* ---- Campo individual ---- */
+  .nuevo-producto__campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  /* Fila de label + boton de IA */
+  .nuevo-producto__label-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  
+  /* Etiqueta */
+  .nuevo-producto__label {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-negro);
+  }
+  
+  /* Indicadores de requerido y opcional */
+  .nuevo-producto__requerido { color: var(--color-naranja); }
+  .nuevo-producto__opcional  { font-weight: 400; color: var(--color-gris-texto); font-size: var(--text-xs); }
+  
+  /* Estilos base para input, textarea y select */
+  .nuevo-producto__input,
+  .nuevo-producto__textarea,
+  .nuevo-producto__select {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid var(--color-gris-claro);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    transition: border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+    outline: none;
+  }
+  
+  .nuevo-producto__input:focus,
+  .nuevo-producto__textarea:focus,
+  .nuevo-producto__select:focus {
+    border-color: var(--color-naranja);
+    box-shadow: 0 0 0 3px rgba(255, 77, 28, 0.12);
+  }
+  
+  .nuevo-producto__input:disabled,
+  .nuevo-producto__textarea:disabled,
+  .nuevo-producto__select:disabled {
+    background-color: var(--color-gris-claro);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .nuevo-producto__input::placeholder,
+  .nuevo-producto__textarea::placeholder {
+    color: var(--color-gris-texto);
+    opacity: 0.6;
+  }
+  
+  /* Textarea */
+  .nuevo-producto__textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+  
+  /* Select con flecha personalizada */
+  .nuevo-producto__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6560' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-4) center;
+    padding-right: var(--space-10);
+  }
+  
+  /* Contador de caracteres */
+  .nuevo-producto__contador {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+  }
+  
+  .nuevo-producto__contador--derecha {
+    text-align: right;
+    margin-left: auto;  /* Empujar a la derecha */
+  }
+  
+  
+  /* ============================================================
+     BOTON DE IA
+     ============================================================ */
+  
+  .nuevo-producto__btn-ia {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-naranja);
+    color: var(--color-naranja);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color var(--transition-fast),
+                color var(--transition-fast),
+                opacity var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Hover del boton de IA */
+  .nuevo-producto__btn-ia:hover:not(:disabled) {
+    background-color: var(--color-naranja);
+    color: var(--color-blanco);
+  }
+  
+  /* Estado cargando — mientras Groq procesa */
+  .nuevo-producto__btn-ia--cargando {
+    opacity: 0.7;
+    cursor: wait;
+    /* Animacion de pulso para indicar actividad */
+    animation: pulsoIA 1s ease-in-out infinite;
+  }
+  
+  @keyframes pulsoIA {
+    0%, 100% { opacity: 0.7; }
+    50%       { opacity: 1; }
+  }
+  
+  /* Estado usado — despues de usar la IA */
+  .nuevo-producto__btn-ia--usada {
+    border-color: var(--color-exito);
+    color: var(--color-exito);
+  }
+  
+  .nuevo-producto__btn-ia--usada:hover:not(:disabled) {
+    background-color: var(--color-exito);
+    color: var(--color-blanco);
+  }
+  
+  /* Boton deshabilitado */
+  .nuevo-producto__btn-ia:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: var(--color-gris-texto);
+    color: var(--color-gris-texto);
+  }
+  
+  /* Footer del textarea: error de IA + indicador + contador */
+  .nuevo-producto__textarea-footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  
+  /* Mensaje de error de la IA */
+  .nuevo-producto__error-ia {
+    font-size: var(--text-xs);
+    color: var(--color-error);
+    flex: 1;
+  }
+  
+  /* Confirmacion de que la IA mejoro la descripcion */
+  .nuevo-producto__ia-ok {
+    font-size: var(--text-xs);
+    color: var(--color-exito);
+    flex: 1;
+  }
+  
+  
+  /* ============================================================
+     CAMPO DE PRECIO
+     ============================================================ */
+  
+  /* Contenedor del input de precio con el prefijo $ */
+  .nuevo-producto__input-precio {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--color-gris-claro);
+    border-radius: var(--radius-md);
+    overflow: hidden;                /* Para que el prefijo comparta el borde */
+    transition: border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+  }
+  
+  /* Cuando el input de precio tiene foco, resaltar todo el contenedor */
+  .nuevo-producto__input-precio:focus-within {
+    border-color: var(--color-naranja);
+    box-shadow: 0 0 0 3px rgba(255, 77, 28, 0.12);
+  }
+  
+  /* Prefijo $ del precio */
+  .nuevo-producto__precio-prefijo {
+    padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    background-color: rgba(245, 240, 232, 0.5); /* Fondo crema sutil */
+    border-right: 1px solid var(--color-gris-claro);
+    user-select: none;    /* No seleccionable */
+    flex-shrink: 0;
+  }
+  
+  /* Input del precio sin borde propio — el contenedor lo maneja */
+  .nuevo-producto__input--precio {
+    border: none !important;          /* Quitar borde propio */
+    box-shadow: none !important;      /* Quitar box-shadow propio */
+    border-radius: 0 !important;      /* Sin esquinas redondeadas propias */
+    flex: 1;
+  }
+  
+  /* Aviso del umbral de comision */
+  .nuevo-producto__aviso-precio {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+    font-style: italic;
+  }
+  
+  
+  /* ---- Fila de dos campos lado a lado ---- */
+  .nuevo-producto__fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Precio y stock lado a lado */
+    gap: var(--space-4);
+  }
+  
+  
+  /* ---- Nota sobre imagenes ---- */
+  .nuevo-producto__nota-imagenes {
+    background-color: rgba(245, 240, 232, 0.8); /* Fondo crema */
+    border: 1px solid var(--color-gris-claro);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .nuevo-producto__nota-imagenes p {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    line-height: 1.5;
+  }
+  
+  
+  /* ---- Error general ---- */
+  .nuevo-producto__error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    background-color: rgba(214, 45, 45, 0.06);
+    border: 1px solid rgba(214, 45, 45, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-error);
+  }
+  
+  
+  /* ---- Botones de accion ---- */
+  .nuevo-producto__acciones {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;  /* Alineados a la derecha */
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-gris-claro); /* Separador visual */
+  }
+  
+  .nuevo-producto__btn-cancelar {
+    font-size: var(--text-sm);
+    padding: var(--space-3) var(--space-5);
+  }
+  
+  .nuevo-producto__btn-guardar {
+    font-size: var(--text-sm);
+    padding: var(--space-3) var(--space-6);
+  }
+  
+  .nuevo-producto__btn-guardar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  
+  /* ============================================================
+     PANEL LATERAL
+     ============================================================ */
+  
+  .nuevo-producto__lateral {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  
+  /* Card de consejo o informacion */
+  .nuevo-producto__consejo,
+  .nuevo-producto__comisiones {
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5) var(--space-5);
+    border: 1px solid var(--color-gris-claro);
+  }
+  
+  /* Titulo de los bloques laterales */
+  .nuevo-producto__consejo-titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-negro);
+    margin-bottom: var(--space-3);
+  }
+  
+  /* Lista de consejos */
+  .nuevo-producto__consejo-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    list-style: none;
+  }
+  
+  .nuevo-producto__consejo-lista li {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    line-height: 1.5;
+    padding-left: var(--space-4);
+    position: relative;
+  }
+  
+  /* Indicador circular antes de cada item */
+  .nuevo-producto__consejo-lista li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-naranja); /* Punto naranja */
+  }
+  
+  /* Texto de comisiones */
+  .nuevo-producto__comisiones-texto {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+  }
+  
+  
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  
+  @media (min-width: 1024px) {
+    /* Formulario + lateral lado a lado en desktop */
+    .nuevo-producto__layout {
+      grid-template-columns: 1fr 300px;
+    }
+  
+    /* El lateral se queda fijo al hacer scroll */
+    .nuevo-producto__lateral {
+      position: sticky;
+      top: calc(64px + var(--space-6));
+    }
+  }
+  
