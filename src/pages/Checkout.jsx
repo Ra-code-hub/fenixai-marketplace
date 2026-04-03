@@ -1,18 +1,19 @@
 // ============================================================
-// src/pages/Checkout.jsx — Pagina de checkout
+// src/pages/Checkout.jsx — Pagina de checkout con QR de pago
 // ============================================================
 // Ruta: /tienda/:slug/checkout (privada — requiere login)
 //
 // Flujo:
 // 1. Comprador llena sus datos de entrega
 // 2. Se crea el pedido en Supabase con estado "pendiente_pago"
-// 3. Se muestra la pantalla de confirmacion con instrucciones
-//    de pago manual (transferencia a Nequi/Daviplata)
-// 4. El vendedor confirma el pago manualmente desde su panel
+// 3. Se muestra QR dinamico con el monto y referencia del pedido
+// 4. Comprador escanea el QR y transfiere a Nequi de FenixAI
+// 5. FenixAI verifica el pago manualmente y confirma el pedido
 // ============================================================
 
 import { useState, useEffect }         from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { QRCodeSVG }                   from 'qrcode.react' // Generador de QR
 import { useAuth }                      from '@/context/AuthContext'
 import { useCart }                      from '@/context/CartContext'
 import { supabase }                     from '@/lib/supabase'
@@ -27,12 +28,20 @@ const formatearPrecio = (valor) => {
   }).format(valor)
 }
 
-// ---- Datos de pago de FenixAI ----
-// En produccion esto vendria de variables de entorno o de la BD
-const DATOS_PAGO = {
-  nequi:     '310-000-0000', // Reemplazar con el numero real
-  daviplata: '310-000-0000', // Reemplazar con el numero real
-  titular:   'FenixAI Marketplace',
+// ---- Numero de Nequi desde variable de entorno ----
+// Nunca aparece visible en pantalla — solo va codificado en el QR
+const NEQUI_NUMERO = import.meta.env.VITE_NEQUI_NUMERO || 'Configura VITE_NEQUI_NUMERO en .env'
+
+// ---- Generar el texto que va dentro del QR ----
+// Este texto es lo que ve el comprador al escanear con la camara
+const generarTextoQR = (monto, referencia) => {
+  return [
+    'FENIXAI MARKETPLACE',
+    `Monto: ${formatearPrecio(monto)}`,
+    `Referencia: ${referencia}`,
+    `Transferir a Nequi: ${NEQUI_NUMERO}`,
+    'Escribe la referencia en el mensaje',
+  ].join('\n')
 }
 
 export default function Checkout() {
@@ -50,14 +59,15 @@ export default function Checkout() {
   const [telefono, setTelefono]   = useState('')
   const [direccion, setDireccion] = useState('')
   const [ciudad, setCiudad]       = useState('')
-  const [notas, setNotas]         = useState('') // Notas adicionales para el vendedor
+  const [notas, setNotas]         = useState('')
 
   // ---- Estado de la UI ----
-  const [procesando, setProcesando]   = useState(false)
-  const [error, setError]             = useState('')
+  const [procesando, setProcesando]     = useState(false)
+  const [error, setError]               = useState('')
   const [pedidoCreado, setPedidoCreado] = useState(null) // Datos del pedido creado
+  const [referenciaCopida, setReferenciaCopida] = useState(false) // Feedback de copia
 
-  // ---- Pre-llenar email del usuario autenticado ----
+  // ---- Pre-llenar email del usuario ----
   useEffect(() => {
     if (user?.email) setEmail(user.email)
   }, [user])
@@ -69,6 +79,13 @@ export default function Checkout() {
     }
   }, [carrito, slug])
 
+  // ---- Copiar referencia al portapapeles ----
+  const copiarReferencia = (referencia) => {
+    navigator.clipboard.writeText(referencia)
+    setReferenciaCopida(true)
+    setTimeout(() => setReferenciaCopida(false), 2000) // Reset despues de 2s
+  }
+
   // ---- Crear el pedido en Supabase ----
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -76,39 +93,27 @@ export default function Checkout() {
     setProcesando(true)
 
     try {
-      // Obtener el ID de la tienda por slug
+      // Obtener la tienda por slug
       const { data: tiendaData, error: tiendaError } = await supabase
         .from('stores')
-        .select('id, nombre')
+        .select('id, nombre, plan')
         .eq('slug', slug)
         .single()
 
-      if (tiendaError || !tiendaData) {
-        throw new Error('No se encontro la tienda')
-      }
+      if (tiendaError || !tiendaData) throw new Error('No se encontro la tienda')
 
-      // ---- Crear un pedido por cada producto en el carrito ----
-      // El modelo actual crea pedidos individuales por producto
-      // En el futuro se puede agrupar en una orden madre
+      // Calcular comision segun el plan de la tienda
+      const comisionPorcentaje =
+        tiendaData.plan === 'pro'     ? 4.0  :
+        tiendaData.plan === 'agencia' ? 2.5  : 8.0
+
+      // Crear un pedido por cada producto del carrito
       const pedidosCreados = []
 
       for (const item of carrito.items) {
-        // Calcular comision segun el plan de la tienda
-        const { data: storeData } = await supabase
-          .from('stores')
-          .select('plan')
-          .eq('id', tiendaData.id)
-          .single()
+        const totalItem     = item.precio * item.cantidad
+        const comisionMonto = Math.round(totalItem * comisionPorcentaje / 100)
 
-        // Porcentaje de comision segun el plan
-        const comisionPorcentaje =
-          storeData?.plan === 'pro'     ? 4.0  :
-          storeData?.plan === 'agencia' ? 2.5  : 8.0
-
-        const totalItem        = item.precio * item.cantidad
-        const comisionMonto    = Math.round(totalItem * comisionPorcentaje / 100)
-
-        // INSERT del pedido en Supabase
         const { data: pedido, error: pedidoError } = await supabase
           .from('orders')
           .insert([{
@@ -122,7 +127,7 @@ export default function Checkout() {
             total:               totalItem,
             comision_porcentaje: comisionPorcentaje,
             comision_monto:      comisionMonto,
-            estado:              'pendiente_pago',  // Estado inicial
+            estado:              'pendiente_pago',
             direccion_entrega:   direccion.trim() || null,
             ciudad_entrega:      ciudad.trim() || null,
             notas_vendedor:      notas.trim() || null,
@@ -131,18 +136,16 @@ export default function Checkout() {
           .single()
 
         if (pedidoError) throw pedidoError
-
         pedidosCreados.push(pedido)
       }
 
-      // ---- Pedidos creados exitosamente ----
-      // Vaciar el carrito y mostrar confirmacion
+      // Pedidos creados — vaciar carrito y mostrar QR
       vaciarCarrito()
       setPedidoCreado({
         pedidos:      pedidosCreados,
         nombreTienda: tiendaData.nombre,
         total:        totalPrecio,
-        // Tomar los primeros 6 caracteres del primer pedido como referencia
+        // Referencia: primeros 6 caracteres del ID en mayusculas
         referencia:   pedidosCreados[0].id.slice(0, 6).toUpperCase(),
       })
 
@@ -154,8 +157,14 @@ export default function Checkout() {
     }
   }
 
-  // ---- Pantalla de confirmacion post-pago ----
+  // ============================================================
+  // PANTALLA DE CONFIRMACION CON QR
+  // ============================================================
   if (pedidoCreado) {
+
+    // Texto que va dentro del QR — contiene numero de Nequi codificado
+    const textoQR = generarTextoQR(pedidoCreado.total, pedidoCreado.referencia)
+
     return (
       <div className="checkout">
         <div className="container">
@@ -166,105 +175,123 @@ export default function Checkout() {
               <span aria-hidden="true">&#10003;</span>
             </div>
 
-            {/* Mensaje principal */}
+            {/* Titulo y descripcion */}
             <h1 className="checkout__confirmacion-titulo">
               Pedido registrado
             </h1>
             <p className="checkout__confirmacion-subtitulo">
-              Tu pedido #{pedidoCreado.referencia} en{' '}
-              <strong>{pedidoCreado.nombreTienda}</strong> esta listo.
-              Ahora debes completar el pago para que el vendedor prepare tu envio.
+              Tu pedido en <strong>{pedidoCreado.nombreTienda}</strong> esta
+              listo. Completa el pago para que el vendedor lo prepare.
             </p>
 
-            {/* Instrucciones de pago */}
-            <div className="checkout__instrucciones">
-              <h2 className="checkout__instrucciones-titulo">
-                Como completar tu pago
-              </h2>
+            {/* ---- Bloque de pago con QR ---- */}
+            <div className="checkout__pago">
 
-              {/* Paso 1 */}
-              <div className="checkout__paso">
-                <span className="checkout__paso-numero">1</span>
-                <div className="checkout__paso-contenido">
-                  <strong>Transfiere el monto exacto</strong>
-                  <p>
-                    Envia exactamente{' '}
-                    <strong className="checkout__monto">
-                      {formatearPrecio(pedidoCreado.total)}
-                    </strong>{' '}
-                    a uno de estos metodos:
-                  </p>
-                </div>
+              {/* Encabezado del bloque */}
+              <div className="checkout__pago-header">
+                <h2 className="checkout__pago-titulo">Completa tu pago</h2>
+                {/* Tiempo limite para pagar */}
+                <span className="checkout__pago-limite">
+                  Tienes 24 horas para pagar
+                </span>
               </div>
 
-              {/* Metodos de pago */}
-              <div className="checkout__metodos">
+              {/* Monto y referencia destacados */}
+              <div className="checkout__pago-resumen">
 
-                <div className="checkout__metodo">
-                  <span className="checkout__metodo-nombre">Nequi</span>
-                  <span className="checkout__metodo-numero">
-                    {DATOS_PAGO.nequi}
+                {/* Monto total */}
+                <div className="checkout__pago-monto">
+                  <span className="checkout__pago-monto-label">
+                    Total a transferir
                   </span>
-                  <span className="checkout__metodo-titular">
-                    {DATOS_PAGO.titular}
-                  </span>
-                </div>
-
-                <div className="checkout__metodo">
-                  <span className="checkout__metodo-nombre">Daviplata</span>
-                  <span className="checkout__metodo-numero">
-                    {DATOS_PAGO.daviplata}
-                  </span>
-                  <span className="checkout__metodo-titular">
-                    {DATOS_PAGO.titular}
+                  <span className="checkout__pago-monto-valor">
+                    {formatearPrecio(pedidoCreado.total)}
                   </span>
                 </div>
 
-              </div>
-
-              {/* Paso 2 */}
-              <div className="checkout__paso">
-                <span className="checkout__paso-numero">2</span>
-                <div className="checkout__paso-contenido">
-                  <strong>Escribe tu numero de pedido en el mensaje</strong>
-                  <p>
-                    En el campo de mensaje o referencia de la transferencia
-                    escribe exactamente:
-                  </p>
-                  {/* Referencia destacada */}
-                  <div className="checkout__referencia">
-                    <span className="checkout__referencia-label">
-                      Tu referencia de pago:
-                    </span>
-                    <code className="checkout__referencia-codigo">
+                {/* Referencia del pedido */}
+                <div className="checkout__pago-referencia">
+                  <span className="checkout__pago-referencia-label">
+                    Referencia del pedido
+                  </span>
+                  <div className="checkout__pago-referencia-fila">
+                    {/* Codigo de referencia en formato monospace */}
+                    <code className="checkout__pago-referencia-codigo">
                       {pedidoCreado.referencia}
                     </code>
-                    {/* Boton copiar */}
+                    {/* Boton de copiar */}
                     <button
-                      className="checkout__btn-copiar"
+                      className={`checkout__btn-copiar ${referenciaCopida ? 'checkout__btn-copiar--ok' : ''}`}
                       type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(pedidoCreado.referencia)
-                        alert('Referencia copiada')
-                      }}
+                      onClick={() => copiarReferencia(pedidoCreado.referencia)}
                     >
-                      Copiar
+                      {referenciaCopida ? 'Copiado' : 'Copiar'}
                     </button>
                   </div>
                 </div>
+
               </div>
 
-              {/* Paso 3 */}
-              <div className="checkout__paso">
-                <span className="checkout__paso-numero">3</span>
-                <div className="checkout__paso-contenido">
-                  <strong>Espera la confirmacion</strong>
-                  <p>
-                    Una vez verifiquemos tu pago te notificaremos por email
-                    a <strong>{email}</strong> y el vendedor comenzara a
-                    preparar tu pedido. Tienes 24 horas para completar el pago.
+              {/* ---- QR dinamico ---- */}
+              <div className="checkout__qr-contenedor">
+
+                <p className="checkout__qr-instruccion">
+                  Escanea con la camara de tu celular
+                </p>
+
+                {/* El QR se genera con qrcode.react */}
+                {/* El numero de Nequi va codificado adentro — no visible en pantalla */}
+                <div className="checkout__qr">
+                  <QRCodeSVG
+                    value={textoQR}          // Texto a codificar
+                    size={200}               // Tamano en pixeles
+                    level="M"               // Nivel de correccion de errores (M = medio)
+                    includeMargin={true}     // Margen blanco alrededor del QR
+                  />
+                </div>
+
+                {/* Instruccion de la referencia */}
+                <p className="checkout__qr-nota">
+                  Al transferir escribe <strong>{pedidoCreado.referencia}</strong> en
+                  el mensaje para identificar tu pago.
+                </p>
+
+              </div>
+
+              {/* ---- Instrucciones paso a paso ---- */}
+              <div className="checkout__pasos">
+
+                <div className="checkout__paso">
+                  <span className="checkout__paso-numero">1</span>
+                  <p className="checkout__paso-texto">
+                    Abre tu app de Nequi o Daviplata
                   </p>
                 </div>
+
+                <div className="checkout__paso">
+                  <span className="checkout__paso-numero">2</span>
+                  <p className="checkout__paso-texto">
+                    Transfiere exactamente{' '}
+                    <strong>{formatearPrecio(pedidoCreado.total)}</strong>
+                  </p>
+                </div>
+
+                <div className="checkout__paso">
+                  <span className="checkout__paso-numero">3</span>
+                  <p className="checkout__paso-texto">
+                    Escribe <strong>{pedidoCreado.referencia}</strong> en
+                    el campo de mensaje o referencia
+                  </p>
+                </div>
+
+                <div className="checkout__paso">
+                  <span className="checkout__paso-numero">4</span>
+                  <p className="checkout__paso-texto">
+                    Nosotros verificamos tu pago y te notificamos
+                    a <strong>{email}</strong>
+                  </p>
+                </div>
+
               </div>
 
             </div>
@@ -292,20 +319,19 @@ export default function Checkout() {
     )
   }
 
-  // ---- Formulario de checkout ---- 
+  // ============================================================
+  // FORMULARIO DE CHECKOUT
+  // ============================================================
   return (
     <div className="checkout">
       <div className="container">
 
-        {/* Navegacion de regreso */}
         <Link to={`/tienda/${slug}/carrito`} className="checkout__volver">
           Volver al carrito
         </Link>
 
-        {/* Encabezado */}
         <h1 className="checkout__titulo">Completa tu pedido</h1>
 
-        {/* Layout: formulario + resumen */}
         <div className="checkout__layout">
 
           {/* ---- Formulario de datos ---- */}
@@ -402,7 +428,7 @@ export default function Checkout() {
               />
             </div>
 
-            {/* Notas adicionales */}
+            {/* Notas */}
             <div className="checkout__campo">
               <label htmlFor="notas" className="checkout__label">
                 Notas para el vendedor
@@ -411,7 +437,7 @@ export default function Checkout() {
               <textarea
                 id="notas"
                 className="checkout__textarea"
-                placeholder="Instrucciones especiales, talla, color, horario de entrega..."
+                placeholder="Instrucciones especiales, talla, color, horario..."
                 value={notas}
                 onChange={(e) => setNotas(e.target.value)}
                 rows={3}
@@ -419,7 +445,7 @@ export default function Checkout() {
               />
             </div>
 
-            {/* Error general */}
+            {/* Error */}
             {error && (
               <div className="checkout__error" role="alert">
                 <span aria-hidden="true">&#9888;</span>
@@ -427,7 +453,7 @@ export default function Checkout() {
               </div>
             )}
 
-            {/* Boton de confirmar pedido */}
+            {/* Boton confirmar */}
             <button
               type="submit"
               className="btn-primary checkout__btn-confirmar"
@@ -446,11 +472,10 @@ export default function Checkout() {
 
           </form>
 
-          {/* ---- Resumen del pedido ---- */}
+          {/* ---- Resumen lateral ---- */}
           <aside className="checkout__resumen">
             <h2 className="checkout__resumen-titulo">Tu pedido</h2>
 
-            {/* Lista de items */}
             <div className="checkout__resumen-items">
               {carrito.items.map((item) => (
                 <div key={item.id} className="checkout__resumen-item">
@@ -469,10 +494,8 @@ export default function Checkout() {
               ))}
             </div>
 
-            {/* Separador */}
             <div className="checkout__resumen-separador" />
 
-            {/* Total */}
             <div className="checkout__resumen-total">
               <span>Total</span>
               <span className="checkout__resumen-total-valor">
@@ -480,10 +503,9 @@ export default function Checkout() {
               </span>
             </div>
 
-            {/* Nota de pago manual */}
             <div className="checkout__resumen-nota">
-              Despues de confirmar te damos las instrucciones
-              para pagar por Nequi o Daviplata.
+              Despues de confirmar te mostramos el QR para
+              pagar por Nequi.
             </div>
 
           </aside>
