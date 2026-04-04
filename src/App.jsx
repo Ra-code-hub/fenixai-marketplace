@@ -3,22 +3,24 @@
 // ============================================================
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layout        from '@/components/Layout'
-import RutaProtegida from '@/components/RutaProtegida'
+import Layout             from '@/components/Layout'
+import RutaProtegida      from '@/components/RutaProtegida'
 
 // Paginas publicas
-import Home          from '@/pages/Home'
-import Login         from '@/pages/Login'
-import Registro      from '@/pages/Registro'
-import TiendaPublica from '@/pages/TiendaPublica'
-import Carrito       from '@/pages/Carrito'
-import NotFound      from '@/pages/NotFound'
+import Home               from '@/pages/Home'
+import Login              from '@/pages/Login'
+import Registro           from '@/pages/Registro'
+import TiendaPublica      from '@/pages/TiendaPublica'
+import Carrito            from '@/pages/Carrito'
+import NotFound           from '@/pages/NotFound'
 
 // Paginas privadas
-import CrearTienda   from '@/pages/CrearTienda'
-import Panel         from '@/pages/Panel'
-import NuevoProducto from '@/pages/NuevoProducto'
-import Checkout      from '@/pages/Checkout'
+import CrearTienda        from '@/pages/CrearTienda'
+import Panel              from '@/pages/Panel'
+import PanelPedidos       from '@/pages/PanelPedidos'
+import PanelPedidoDetalle from '@/pages/PanelPedidoDetalle'
+import NuevoProducto      from '@/pages/NuevoProducto'
+import Checkout           from '@/pages/Checkout'
 
 const router = createBrowserRouter([
   {
@@ -27,10 +29,10 @@ const router = createBrowserRouter([
     children: [
 
       // ---- Rutas publicas ----
-      { index: true,            element: <Home /> },
-      { path: 'login',          element: <Login /> },
-      { path: 'registro',       element: <Registro /> },
-      { path: 'tienda/:slug',   element: <TiendaPublica /> },
+      { index: true,                  element: <Home /> },
+      { path: 'login',                element: <Login /> },
+      { path: 'registro',             element: <Registro /> },
+      { path: 'tienda/:slug',         element: <TiendaPublica /> },
       { path: 'tienda/:slug/carrito', element: <Carrito /> },
 
       // ---- Rutas privadas ----
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
       {
         path: 'panel',
         element: <RutaProtegida><Panel /></RutaProtegida>,
+      },
+      {
+        path: 'panel/pedidos',
+        element: <RutaProtegida><PanelPedidos /></RutaProtegida>,
+      },
+      {
+        path: 'panel/pedidos/:id',
+        element: <RutaProtegida><PanelPedidoDetalle /></RutaProtegida>,
       },
       {
         path: 'tienda/:slug/nuevo-producto',
