@@ -484,4 +484,235 @@
       position: sticky;
       top: calc(64px + var(--space-6));
     }
+  }
+  
+  
+  /* ============================================================
+     BLOQUE DE PAGO CON QR
+     ============================================================ */
+  
+  /* Contenedor principal del bloque de pago */
+  .checkout__pago {
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--color-gris-claro);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  
+  /* Encabezado del bloque */
+  .checkout__pago-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  
+  .checkout__pago-titulo {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-negro);
+  }
+  
+  /* Badge de tiempo limite */
+  .checkout__pago-limite {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: #92400E;                          /* Ambar oscuro */
+    background-color: rgba(180, 83, 9, 0.08);
+    border: 1px solid rgba(180, 83, 9, 0.2);
+    padding: 3px var(--space-3);
+    border-radius: var(--radius-full);
+  }
+  
+  /* ---- Resumen de monto y referencia ---- */
+  .checkout__pago-resumen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  
+  /* Bloque del monto */
+  .checkout__pago-monto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    background-color: var(--color-fondo);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    border: 1px solid var(--color-gris-claro);
+  }
+  
+  .checkout__pago-monto-label {
+    font-size: var(--text-xs);
+    color: var(--color-gris-texto);
+    font-weight: 500;
+  }
+  
+  /* Monto en Syne para darle peso visual */
+  .checkout__pago-monto-valor {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-negro);
+    line-height: 1.1;
+  }
+  
+  /* Bloque de la referencia */
+  .checkout__pago-referencia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    background-color: var(--color-negro);   /* Fondo negro para contraste */
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+  }
+  
+  .checkout__pago-referencia-label {
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+  }
+  
+  /* Fila con el codigo y el boton de copiar */
+  .checkout__pago-referencia-fila {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  
+  /* Codigo de referencia */
+  .checkout__pago-referencia-codigo {
+    font-family: monospace;
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-blanco);
+    letter-spacing: 0.15em;   /* Espaciado amplio para legibilidad */
+  }
+  
+  /* Boton de copiar referencia */
+  .checkout__btn-copiar {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 3px var(--space-2);
+    cursor: pointer;
+    transition: opacity var(--transition-fast),
+                background-color var(--transition-fast);
+    white-space: nowrap;
+  }
+  
+  .checkout__btn-copiar:hover {
+    opacity: 0.85;
+  }
+  
+  /* Estado copiado — verde */
+  .checkout__btn-copiar--ok {
+    background-color: var(--color-exito);
+    color: var(--color-blanco);
+  }
+  
+  
+  /* ---- QR dinamico ---- */
+  .checkout__qr-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+  }
+  
+  /* Instruccion encima del QR */
+  .checkout__qr-instruccion {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-gris-texto);
+  }
+  
+  /* Contenedor del QR con borde y padding */
+  .checkout__qr {
+    padding: var(--space-4);
+    background-color: var(--color-blanco);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-gris-claro);
+    display: inline-flex;       /* Ajustarse al tamano del QR */
+  }
+  
+  /* Nota debajo del QR */
+  .checkout__qr-nota {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.6;
+  }
+  
+  .checkout__qr-nota strong {
+    color: var(--color-negro);
+    font-weight: 600;
+  }
+  
+  
+  /* ---- Pasos de instrucciones ---- */
+  .checkout__pasos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    border-top: 1px solid var(--color-gris-claro);
+    padding-top: var(--space-5);
+  }
+  
+  /* Paso individual */
+  .checkout__paso {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  
+  /* Numero del paso */
+  .checkout__paso-numero {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-naranja);
+    color: var(--color-blanco);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  
+  /* Texto del paso */
+  .checkout__paso-texto {
+    font-size: var(--text-sm);
+    color: var(--color-gris-texto);
+    line-height: 1.5;
+  }
+  
+  .checkout__paso-texto strong {
+    color: var(--color-negro);
+    font-weight: 600;
+  }
+  
+  
+  /* ============================================================
+     RESPONSIVE — QR
+     ============================================================ */
+  
+  @media (max-width: 480px) {
+    /* En movil muy pequeno, el resumen de monto/referencia va en columna */
+    .checkout__pago-resumen {
+      grid-template-columns: 1fr;
+    }
   }  
