@@ -1,95 +1,115 @@
 // ============================================================
-// src/context/AuthContext.jsx — Contexto global de autenticación
+// src/context/AuthContext.jsx — Contexto global de autenticacion
 // ============================================================
-// Provee el estado del usuario autenticado a toda la app.
-// Cualquier componente puede consumirlo con el hook useAuth().
+// Provee el estado del usuario autenticado Y su rol a toda la app.
+// Roles: 'comprador' | 'vendedor' | 'admin'
 // Uso: import { useAuth } from '@/context/AuthContext'
 // ============================================================
 
-import { createContext, useContext, useEffect, useState } from 'react' // Hooks de React
-import { supabase } from '@/lib/supabase' // Cliente de Supabase
+import { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
-// Crear el contexto vacío — se llenará con el Provider
 const AuthContext = createContext(null)
 
-// ---- Provider ---- //
-// Envuelve la app en App.jsx y distribuye el estado de auth
 export function AuthProvider({ children }) {
 
-  // Estado del usuario actual (null = no autenticado)
-  const [user, setUser] = useState(null)
+  const [user, setUser]       = useState(null)    // Usuario de Supabase Auth
+  const [perfil, setPerfil]   = useState(null)    // Perfil con el rol
+  const [loading, setLoading] = useState(true)    // Carga inicial
 
-  // Estado de carga inicial — mientras se verifica la sesión
-  const [loading, setLoading] = useState(true)
+  // ---- Cargar perfil del usuario desde la tabla profiles ----
+  const cargarPerfil = async (userId) => {
+    if (!userId) { setPerfil(null); return }
+
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, rol')
+      .eq('id', userId)
+      .single()
+
+    setPerfil(data || null)
+  }
 
   useEffect(() => {
-    // Paso 1: obtener la sesión activa al montar la app
-    // Supabase la recupera de localStorage automáticamente
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null) // Si hay sesión, guardar el usuario
-      setLoading(false)              // Ya terminó la verificación inicial
+    // Obtener sesion activa al montar
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const usuarioActual = session?.user ?? null
+      setUser(usuarioActual)
+      await cargarPerfil(usuarioActual?.id)
+      setLoading(false)
     })
 
-    // Paso 2: suscribirse a cambios de sesión en tiempo real
-    // Se dispara al hacer login, logout o cuando el token se refresca
+    // Escuchar cambios de sesion
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null) // Actualizar usuario con cada cambio
+      async (_event, session) => {
+        const usuarioActual = session?.user ?? null
+        setUser(usuarioActual)
+        await cargarPerfil(usuarioActual?.id)
       }
     )
 
-    // Cleanup: cancelar la suscripción cuando el componente se desmonte
     return () => subscription.unsubscribe()
-  }, []) // Array vacío = solo se ejecuta una vez al montar
+  }, [])
 
-  // ---- Funciones de auth ---- //
+  // ---- Funciones de auth ----
 
-  // Registrar nuevo usuario con email y contraseña
   const signUp = async (email, password) => {
     const { data, error } = await supabase.auth.signUp({ email, password })
-    return { data, error } // Devolver ambos para manejo en el componente
+    return { data, error }
   }
 
-  // Iniciar sesión con email y contraseña
   const signIn = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     return { data, error }
   }
 
-  // Cerrar sesión del usuario actual
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     return { error }
   }
 
-  // Valor que se comparte con toda la app a través del contexto
+  // ---- Cambiar rol a vendedor ----
+  // Se llama cuando el comprador quiere abrir su tienda
+  const convertirseEnVendedor = async () => {
+    if (!user) return { error: 'No hay usuario autenticado' }
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ rol: 'vendedor' })
+      .eq('id', user.id)
+
+    if (!error) {
+      // Actualizar el perfil local sin recargar
+      setPerfil(prev => ({ ...prev, rol: 'vendedor' }))
+    }
+
+    return { error }
+  }
+
   const value = {
-    user,       // Objeto del usuario actual (o null)
-    loading,    // true mientras se carga la sesión inicial
-    signUp,     // Función para registrarse
-    signIn,     // Función para iniciar sesión
-    signOut,    // Función para cerrar sesión
-    isAuth: !!user, // Booleano: true si hay usuario autenticado
+    user,
+    perfil,
+    loading,
+    rol:       perfil?.rol || null,        // 'comprador' | 'vendedor' | 'admin'
+    isAuth:    !!user,                     // true si hay sesion activa
+    esAdmin:   perfil?.rol === 'admin',    // true si es administrador
+    esVendedor: perfil?.rol === 'vendedor' || perfil?.rol === 'admin', // admin tambien puede vender
+    esComprador: !!user,                   // todo usuario autenticado puede comprar
+    signUp,
+    signIn,
+    signOut,
+    convertirseEnVendedor,
   }
 
   return (
-    // Proveer el valor a todos los componentes hijos
-    // Mientras carga la sesión, no mostrar nada para evitar flash
     <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
   )
 }
 
-// ---- Hook personalizado ---- //
-// Simplifica el consumo del contexto: const { user } = useAuth()
 export function useAuth() {
   const context = useContext(AuthContext)
-
-  // Si se usa fuera del Provider, lanzar error descriptivo
-  if (!context) {
-    throw new Error('useAuth() debe usarse dentro de <AuthProvider>')
-  }
-
+  if (!context) throw new Error('useAuth() debe usarse dentro de <AuthProvider>')
   return context
 }
