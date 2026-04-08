@@ -6,62 +6,95 @@
 // Uso: import { useAuth } from '@/context/AuthContext'
 // ============================================================
 
-const cargarPerfil = async (userId) => {
-  if (!userId) { setPerfil(null); return }
+import { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
-  try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, rol')
-      .eq('id', userId)
-      .single()
+const AuthContext = createContext(null)
 
-    if (error) {
-      console.error('Error cargando perfil:', error)
-      // Si falla, asignar perfil basico para no bloquear la app
+export function AuthProvider({ children }) {
+
+  const [user, setUser]       = useState(null)
+  const [perfil, setPerfil]   = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  const cargarPerfil = async (userId) => {
+    if (!userId) { setPerfil(null); return }
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, rol')
+        .eq('id', userId)
+        .single()
+      if (error) {
+        setPerfil({ id: userId, rol: 'comprador' })
+        return
+      }
+      setPerfil(data || { id: userId, rol: 'comprador' })
+    } catch (err) {
       setPerfil({ id: userId, rol: 'comprador' })
-      return
     }
-
-    setPerfil(data || { id: userId, rol: 'comprador' })
-  } catch (err) {
-    console.error('Error inesperado en perfil:', err)
-    setPerfil({ id: userId, rol: 'comprador' })
   }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      try {
+        const u = session?.user ?? null
+        setUser(u)
+        if (u) await cargarPerfil(u.id)
+        else setPerfil(null)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false) // SIEMPRE se ejecuta
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        try {
+          const u = session?.user ?? null
+          setUser(u)
+          if (u) await cargarPerfil(u.id)
+          else setPerfil(null)
+        } catch (err) {
+          console.error(err)
+        }
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const signUp   = async (email, password) => supabase.auth.signUp({ email, password })
+  const signIn   = async (email, password) => supabase.auth.signInWithPassword({ email, password })
+  const signOut  = async () => supabase.auth.signOut()
+
+  const convertirseEnVendedor = async () => {
+    if (!user) return { error: 'No autenticado' }
+    const { error } = await supabase.from('profiles').update({ rol: 'vendedor' }).eq('id', user.id)
+    if (!error) setPerfil(prev => ({ ...prev, rol: 'vendedor' }))
+    return { error }
+  }
+
+  const value = {
+    user, perfil, loading,
+    rol:         perfil?.rol || null,
+    isAuth:      !!user,
+    esAdmin:     perfil?.rol === 'admin',
+    esVendedor:  perfil?.rol === 'vendedor' || perfil?.rol === 'admin',
+    esComprador: !!user,
+    signUp, signIn, signOut, convertirseEnVendedor,
+  }
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  )
 }
 
-useEffect(() => {
-  supabase.auth.getSession().then(async ({ data: { session } }) => {
-    try {
-      const usuarioActual = session?.user ?? null
-      setUser(usuarioActual)
-      if (usuarioActual) {
-        await cargarPerfil(usuarioActual.id)
-      } else {
-        setPerfil(null)
-      }
-    } catch (err) {
-      console.error('Error en getSession:', err)
-    } finally {
-      setLoading(false) // Siempre se ejecuta pase lo que pase
-    }
-  })
-
-  const { data: { subscription } } = supabase.auth.onAuthStateChange(
-    async (_event, session) => {
-      try {
-        const usuarioActual = session?.user ?? null
-        setUser(usuarioActual)
-        if (usuarioActual) {
-          await cargarPerfil(usuarioActual.id)
-        } else {
-          setPerfil(null)
-        }
-      } catch (err) {
-        console.error('Error en onAuthStateChange:', err)
-      }
-    }
-  )
-
-  return () => subscription.unsubscribe()
-}, [])
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) throw new Error('useAuth() debe usarse dentro de <AuthProvider>')
+  return context
+}
