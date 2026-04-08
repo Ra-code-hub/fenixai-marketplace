@@ -29,3 +29,39 @@ const cargarPerfil = async (userId) => {
     setPerfil({ id: userId, rol: 'comprador' })
   }
 }
+
+useEffect(() => {
+  supabase.auth.getSession().then(async ({ data: { session } }) => {
+    try {
+      const usuarioActual = session?.user ?? null
+      setUser(usuarioActual)
+      if (usuarioActual) {
+        await cargarPerfil(usuarioActual.id)
+      } else {
+        setPerfil(null)
+      }
+    } catch (err) {
+      console.error('Error en getSession:', err)
+    } finally {
+      setLoading(false) // Siempre se ejecuta pase lo que pase
+    }
+  })
+
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    async (_event, session) => {
+      try {
+        const usuarioActual = session?.user ?? null
+        setUser(usuarioActual)
+        if (usuarioActual) {
+          await cargarPerfil(usuarioActual.id)
+        } else {
+          setPerfil(null)
+        }
+      } catch (err) {
+        console.error('Error en onAuthStateChange:', err)
+      }
+    }
+  )
+
+  return () => subscription.unsubscribe()
+}, [])
