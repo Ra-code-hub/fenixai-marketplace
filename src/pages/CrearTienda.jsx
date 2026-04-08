@@ -279,7 +279,7 @@ export default function CrearTienda() {
               // Deshabilitado si falta el nombre, el slug no está disponible, o está cargando
               disabled={cargando || !nombre.trim() || slugDisponible === false}
             >
-              {cargando ? 'Creando tu tienda...' : 'Crear mi tienda gratis 🔥'}
+              {cargando ? 'Creando tu tienda...' : 'Crear mi tienda gratis '}
             </button>
 
             {/* Nota sobre el plan gratuito */}
