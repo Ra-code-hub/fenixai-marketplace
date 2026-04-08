@@ -5,24 +5,23 @@ export default function RutaProtegida({ children, rol }) {
 
   const { isAuth, loading, perfil, esAdmin } = useAuth()
 
-  // Mientras verifica la sesion o carga el perfil — no hacer nada
-  if (loading) return null
+  // Esperar a que cargue la sesion Y el perfil
+  if (loading || (isAuth && !perfil)) return null
 
-  // Si requiere rol pero el perfil aun no cargo — esperar
-  if (rol && !perfil) return null
-
-  // Sin sesion — redirigir al login
+  // Sin sesion — ir al login
   if (!isAuth) return <Navigate to="/login" replace />
 
-  // Verificar rol si se requiere
-  if (rol) {
-    if (esAdmin) return children
+  // Sin rol requerido — dejar pasar
+  if (!rol) return children
 
-    if (perfil?.rol !== rol) {
-      if (rol === 'admin')    return <Navigate to="/"             replace />
-      if (rol === 'vendedor') return <Navigate to="/quiero-vender" replace />
-      return <Navigate to="/" replace />
-    }
+  // Admin siempre tiene acceso a todo
+  if (esAdmin) return children
+
+  // Verificar rol
+  if (perfil?.rol !== rol) {
+    if (rol === 'admin')    return <Navigate to="/"              replace />
+    if (rol === 'vendedor') return <Navigate to="/quiero-vender" replace />
+    return <Navigate to="/" replace />
   }
 
   return children
