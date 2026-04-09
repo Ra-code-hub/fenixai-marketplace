@@ -15,15 +15,19 @@ import { Link }                 from 'react-router-dom'
 import { supabase }             from '@/lib/supabase'
 import '@/styles/Admin.css'
 
-const { esAdmin } = useAuth()
+export default function Admin() {
+  const { esAdmin, loading } = useAuth()
 
-// Si no es admin, no mostrar nada
-if (!esAdmin) return (
-  <div style={{padding: '40px', textAlign: 'center'}}>
-    <h2>Acceso restringido</h2>
-    <p>No tienes permisos para ver esta página.</p>
-  </div>
-)
+  if (loading) return null
+  
+  if (!esAdmin) return (
+    <div style={{padding: '40px', textAlign: 'center'}}>
+      <h2>Acceso restringido</h2>
+    </div>
+  )
+  }
+
+  // ... resto del componente
 
 // ---- Formatear precio ----
 const formatearPrecio = (valor) => {
