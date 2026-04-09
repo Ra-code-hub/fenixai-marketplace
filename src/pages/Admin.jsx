@@ -15,6 +15,16 @@ import { Link }                 from 'react-router-dom'
 import { supabase }             from '@/lib/supabase'
 import '@/styles/Admin.css'
 
+const { esAdmin } = useAuth()
+
+// Si no es admin, no mostrar nada
+if (!esAdmin) return (
+  <div style={{padding: '40px', textAlign: 'center'}}>
+    <h2>Acceso restringido</h2>
+    <p>No tienes permisos para ver esta página.</p>
+  </div>
+)
+
 // ---- Formatear precio ----
 const formatearPrecio = (valor) => {
   return new Intl.NumberFormat('es-CO', {
