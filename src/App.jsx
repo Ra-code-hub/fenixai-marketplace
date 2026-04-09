@@ -86,7 +86,7 @@ const router = createBrowserRouter([
       // ======================================================
       {
         path: 'admin',
-        element: <div style={{padding: '40px', fontSize: '24px'}}>Admin funciona</div>,
+        element: <RutaProtegida rol="admin"><Admin /></RutaProtegida>,
       },
       // Proximas rutas de admin:
       // { path: 'admin/pedidos',    element: <RutaProtegida rol="admin"><AdminPedidos /></RutaProtegida> },
