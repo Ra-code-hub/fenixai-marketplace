@@ -19,22 +19,30 @@ export function AuthProvider({ children }) {
 
   const cargarPerfil = async (userId) => {
     if (!userId) { setPerfil(null); return }
+  
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('id, rol')
         .eq('id', userId)
         .single()
+  
+      console.log('PERFIL DATA:', data)
+      console.log('PERFIL ERROR:', error)
+      console.log('USER ID:', userId)
+  
       if (error) {
         setPerfil({ id: userId, rol: 'comprador' })
         return
       }
+  
       setPerfil(data || { id: userId, rol: 'comprador' })
     } catch (err) {
+      console.error('Error inesperado:', err)
       setPerfil({ id: userId, rol: 'comprador' })
     }
   }
-
+  
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       try {
