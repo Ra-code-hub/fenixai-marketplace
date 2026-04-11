@@ -42,12 +42,26 @@ export function AuthProvider({ children }) {
       setPerfil({ id: userId, rol: 'comprador' })
     }
   }
-  
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       try {
         const u = session?.user ?? null
         setUser(u)
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
+          try {
+            const u = session?.user ?? null
+            setUser(u)
+            console.log('SESION:', session)  // ← agrega esta línea
+            console.log('USUARIO:', u)       // ← y esta
+            if (u) await cargarPerfil(u.id)
+            else setPerfil(null)
+          } catch (err) {
+            console.error(err)
+          } finally {
+            setLoading(false)
+          }
+        })
         if (u) await cargarPerfil(u.id)
         else setPerfil(null)
       } catch (err) {
