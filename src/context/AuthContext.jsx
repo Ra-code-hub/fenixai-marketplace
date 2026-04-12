@@ -64,22 +64,6 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        try {
-          const u = session?.user ?? null
-          setUser(u)
-          if (u) await cargarPerfil(u.id)
-          else setPerfil(null)
-        } catch (err) {
-          console.error(err)
-        }
-      }
-    )
-
-    return () => subscription.unsubscribe()
-  }, [])
-
   const signUp   = async (email, password) => supabase.auth.signUp({ email, password })
   const signIn   = async (email, password) => supabase.auth.signInWithPassword({ email, password })
   const signOut  = async () => supabase.auth.signOut()
