@@ -44,6 +44,8 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
+    // onAuthStateChange dispara INITIAL_SESSION automaticamente al suscribirse
+    // eso cubre tanto sesiones existentes como nuevos logins/logouts
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         try {
@@ -52,14 +54,13 @@ export function AuthProvider({ children }) {
           if (u) await cargarPerfil(u.id)
           else setPerfil(null)
         } catch (err) {
-          console.error(err)
+          console.error('Error en auth:', err)
+          setPerfil(null)
         } finally {
-          setLoading(false)
+          setLoading(false) // Siempre se ejecuta
         }
       }
     )
-  
-    supabase.auth.getSession()
   
     return () => subscription.unsubscribe()
   }, [])
