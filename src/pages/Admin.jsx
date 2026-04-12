@@ -113,19 +113,8 @@ export default function Admin() {
   // Esperar autenticacion
   if (authLoading) return null
 
-  // Esperar autenticacion Y que el perfil cargue
-if (authLoading) return null
-
-// Si hay usuario pero el perfil aun no carga — esperar
-if (!perfil) return null
-
-// Control de acceso
-if (!esAdmin) return (
-  <div style={{ padding: '40px', textAlign: 'center' }}>
-    <h2>Acceso restringido</h2>
-    <p>No tienes permisos para ver esta pagina.</p>
-  </div>
-)
+  // Si hay usuario pero el perfil aun no carga — esperar
+  if (!perfil) return null
 
   // Control de acceso
   if (!esAdmin) return (
