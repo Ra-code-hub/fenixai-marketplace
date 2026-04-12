@@ -41,7 +41,7 @@ const ESTADOS = {
 
 export default function Admin() {
 
-  const { esAdmin, loading: authLoading } = useAuth()
+  const { esAdmin, perfil, loading: authLoading } = useAuth()
 
   const [metricas, setMetricas] = useState({
     totalTiendas: 0, tiendasActivas: 0, tiendasPendientes: 0,
